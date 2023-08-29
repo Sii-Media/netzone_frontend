@@ -1,0 +1,17 @@
+/* selectStyles.css */
+
+/* Remove focus outline from the control */
+.react-select__control:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Remove highlight from the selected option */
+.react-select__option--is-selected {
+  background-color: transparent;
+}
+
+.custom-select {
+  /* Set the border radius to 30px */
+  border-radius: 100px;
+}

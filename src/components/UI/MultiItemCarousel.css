@@ -1,0 +1,28 @@
+/* Custom styles for the default arrows */
+.alice-carousel__prev-btn-item,
+.alice-carousel__next-btn-item {
+  /* background-color: #5776a5; Arrow background color */
+  color: #5776a58c !important; /* Arrow color */
+  border-radius: 0%;
+  font-size: 24px; /* Arrow font size */
+  font-weight: bold;
+  border-radius: 50%; /* Rounded corners */
+  transition: 0.3s;
+}
+.alice-carousel__prev-btn-item:hover,
+.alice-carousel__next-btn-item:hover {
+  color: #5776a5 !important; /* Arrow color */
+}
+
+.alice-carousel__prev-btn,
+.alice-carousel__next-btn {
+  padding: 0px !important;
+}
+.alice-carousel__dots {
+  margin: 10px 3px 0px !important;
+}
+
+.alice-carousel__prev-btn,
+.alice-carousel__next-btn {
+  margin: 0px;
+}

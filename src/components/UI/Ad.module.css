@@ -1,0 +1,26 @@
+.ad::before {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 50%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: 0.3s;
+}
+.ad::after {
+  content: "";
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 50%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: 0.3s;
+}
+.ad:hover::before {
+  left: -250px;
+}
+.ad:hover::after {
+  right: -250px;
+}
