@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const SignUp = () => {
@@ -14,35 +14,36 @@ const SignUp = () => {
     { value: "sea_companies", label: "Sea Companies" },
     { value: "user", label: "Clients" },
     { value: "freezone", label: "Free Zone" },
+    { value: "factory", label: "Factories" },
     { value: "news_agency", label: "New Agency" },
     { value: "delivery_company", label: "Delivery Company" },
   ];
 
-  const [tradeLicenseFile, setTradeLicenseFile] = useState(null);
-  const [profilePhotoFile, setProfilePhotoFile] = useState(null);
-  const [coverPhotoFile, setCoverPhotoFile] = useState(null);
-  const [frontIdPhotoFile, setFrontIdPhotoFile] = useState(null);
-  const [backIdPhotoFile, setBackIdPhotoFile] = useState(null);
-  console.log(profilePhotoFile);
-  const handleTradeLicenseChange = (event) => {
-    setTradeLicenseFile(event.target.files[0]);
-  };
+  // const [tradeLicenseFile, setTradeLicenseFile] = useState(null);
+  // const [profilePhotoFile, setProfilePhotoFile] = useState(null);
+  // const [coverPhotoFile, setCoverPhotoFile] = useState(null);
+  // const [frontIdPhotoFile, setFrontIdPhotoFile] = useState(null);
+  // const [backIdPhotoFile, setBackIdPhotoFile] = useState(null);
+  // console.log(profilePhotoFile);
+  // const handleTradeLicenseChange = (event) => {
+  //   setTradeLicenseFile(event.target.files[0]);
+  // };
 
-  const handleProfilePhotoChange = (event) => {
-    setProfilePhotoFile(event.target.files[0]);
-  };
+  // const handleProfilePhotoChange = (event) => {
+  //   setProfilePhotoFile(event.target.files[0]);
+  // };
 
-  const handleCoverPhotoChange = (event) => {
-    setCoverPhotoFile(event.target.files[0]);
-  };
+  // const handleCoverPhotoChange = (event) => {
+  //   setCoverPhotoFile(event.target.files[0]);
+  // };
 
-  const handleFrontIdPhotoChange = (event) => {
-    setFrontIdPhotoFile(event.target.files[0]);
-  };
+  // const handleFrontIdPhotoChange = (event) => {
+  //   setFrontIdPhotoFile(event.target.files[0]);
+  // };
 
-  const handleBackIdPhotoChange = (event) => {
-    setBackIdPhotoFile(event.target.files[0]);
-  };
+  // const handleBackIdPhotoChange = (event) => {
+  //   setBackIdPhotoFile(event.target.files[0]);
+  // };
 
   const [selectedOption, setSelectedOption] = useState("");
 
@@ -51,120 +52,123 @@ const SignUp = () => {
   };
 
   const userTypeRef = useRef();
-  const cou = useRef();
-  const emailRef = useRef();
-  const userNameRef = useRef();
-  const password = useRef();
-  const rePassword = useRef();
-  const firstMobile = useRef();
-  const secondeMobile = useRef();
-  const thirdMobile = useRef();
-  const bio = useRef();
-  const description = useRef();
-  const website = useRef();
-  const link = useRef();
-  const slogn = useRef();
-  const deliverable = useRef();
-  const subcategory = useRef();
-  const address = useRef();
-  const isFreeZoon = useRef();
-  const isService = useRef();
-  const companyProductsNumber = useRef();
-  const sellType = useRef();
-  const toCountry = useRef();
-  const tradeLicensePhoto = useRef();
-  const profilePhoto = useRef();
-  const coverPhoto = useRef();
-  const frontIdPhoto = useRef();
-  const backIdPhoto = useRef();
-  console.log(backIdPhoto);
-  useEffect(() => {
-    console.log(userNameRef.current.value);
-  });
+  // const cou = useRef();
+  // const emailRef = useRef();
+  // const userNameRef = useRef();
+  // const password = useRef();
+  // const rePassword = useRef();
+  // const firstMobile = useRef();
+  // const secondeMobile = useRef();
+  // const thirdMobile = useRef();
+  // const bio = useRef();
+  // const description = useRef();
+  // const website = useRef();
+  // const link = useRef();
+  // const slogn = useRef();
+  // const deliverable = useRef();
+  // const subcategory = useRef();
+  // const address = useRef();
+  // const isFreeZoon = useRef();
+  // const isService = useRef();
+  // const companyProductsNumber = useRef();
+  // const sellType = useRef();
+  // const toCountry = useRef();
+  // const tradeLicensePhoto = useRef();
+  // const profilePhoto = useRef();
+  // const coverPhoto = useRef();
+  // const frontIdPhoto = useRef();
+  // const backIdPhoto = useRef();
+  // console.log(backIdPhoto);
+  // useEffect(() => {
+  //   console.log(userNameRef.current.value);
+  // });
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append("userType", userTypeRef.current.value);
-    formData.append("country", cou.current.value);
-    formData.append("email", emailRef.current.value);
-    formData.append("username", userNameRef.current.value.toString());
-    formData.append("password", password.current.value);
-    formData.append("firstMobile", firstMobile.current.value);
-    formData.append("secondeMobile", secondeMobile.current.value);
-    formData.append("thirdMobile", thirdMobile.current.value);
-    formData.append("bio", bio.current.value);
-    formData.append("description", description.current.value);
-    formData.append("website", website.current.value);
-    formData.append("link", link.current.value);
-    formData.append("slogn", slogn.current.value);
-    formData.append("deliverable", deliverable.current.value ? true : false);
-    formData.append("subcategory", subcategory.current.value);
-    formData.append("address", address.current.value);
-    formData.append("isFreeZoon", isFreeZoon.current.value ? true : false);
-    formData.append("isService", isService.current.value ? true : false);
-    formData.append(
-      "companyProductsNumber",
-      companyProductsNumber.current.value
-    );
-    formData.append("sellType", sellType.current.value);
-    formData.append("toCountry", toCountry.current.value);
-    formData.append("tradeLicensePhoto", tradeLicenseFile);
-    formData.append("profilePhoto", profilePhotoFile);
-    formData.append("coverPhoto", coverPhotoFile);
-    formData.append("frontIdPhoto", frontIdPhotoFile);
-    formData.append("backIdPhoto", backIdPhotoFile);
-    console.log(formData);
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   const formData = new FormData();
+  //   formData.append("userType", userTypeRef.current.value);
+  //   formData.append("country", cou.current.value);
+  //   formData.append("email", emailRef.current.value);
+  //   formData.append("username", userNameRef.current.value.toString());
+  //   formData.append("password", password.current.value);
+  //   formData.append("firstMobile", firstMobile.current.value);
+  //   formData.append("secondeMobile", secondeMobile.current.value);
+  //   formData.append("thirdMobile", thirdMobile.current.value);
+  //   formData.append("bio", bio.current.value);
+  //   formData.append("description", description.current.value);
+  //   formData.append("website", website.current.value);
+  //   formData.append("link", link.current.value);
+  //   formData.append("slogn", slogn.current.value);
+  //   formData.append("deliverable", deliverable.current.value ? true : false);
+  //   formData.append("subcategory", subcategory.current.value);
+  //   formData.append("address", address.current.value);
+  //   formData.append("isFreeZoon", isFreeZoon.current.value ? true : false);
+  //   formData.append("isService", isService.current.value ? true : false);
+  //   formData.append(
+  //     "companyProductsNumber",
+  //     companyProductsNumber.current.value
+  //   );
+  //   formData.append("sellType", sellType.current.value);
+  //   formData.append("toCountry", toCountry.current.value);
+  //   formData.append("tradeLicensePhoto", tradeLicenseFile);
+  //   formData.append("profilePhoto", profilePhotoFile);
+  //   formData.append("coverPhoto", coverPhotoFile);
+  //   formData.append("frontIdPhoto", frontIdPhotoFile);
+  //   formData.append("backIdPhoto", backIdPhotoFile);
+  //   console.log(formData);
 
-    console.log(formData.getAll("bio"));
-    console.log(formData.getAll("description"));
-    console.log(bio.current.value);
-    console.log(description.current.value);
-    try {
-      const response = await fetch(
-        "https://net-zoon.onrender.com/user/register",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+  //   console.log(formData.getAll("bio"));
+  //   console.log(formData.getAll("description"));
+  //   console.log(bio.current.value);
+  //   console.log(description.current.value);
+  //   try {
+  //     const response = await fetch(
+  //       "https://net-zoon.onrender.com/user/register",
+  //       {
+  //         method: "POST",
+  //         body: formData,
+  //       }
+  //     );
 
-      if (response.ok) {
-        // Handle success
-        console.log("Data sent successfully");
-        const data = await response.json();
-        console.log(data);
-        window.sessionStorage.setItem("id", data.result._id);
-        window.sessionStorage.setItem("id", data.result.username);
-        window.alert("User Created, please go to LogIn page");
-        navigate("/login");
-      } else {
-        const data = await response.json();
-        // Handle error
-        console.log(data);
-        console.log(formData);
-        window.alert("User not created, please check again :)");
-        console.error("Error sending data");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+  //     if (response.ok) {
+  //       // Handle success
+  //       console.log("Data sent successfully");
+  //       const data = await response.json();
+  //       console.log(data);
+  //       window.sessionStorage.setItem("id", data.result._id);
+  //       window.sessionStorage.setItem("id", data.result.username);
+  //       window.alert("User Created, please go to LogIn page");
+  //       navigate("/login");
+  //     } else {
+  //       const data = await response.json();
+  //       // Handle error
+  //       console.log(data);
+  //       console.log(formData);
+  //       window.alert("User not created, please check again :)");
+  //       console.error("Error sending data");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
 
-  const [passwordMatch, setPasswordMatch] = useState(false); // New state for password matching
+  // const [passwordMatch, setPasswordMatch] = useState(false); // New state for password matching
 
-  const handlePasswordChange = () => {
-    setPasswordMatch(password.current.value === rePassword.current.value);
-  };
+  // const handlePasswordChange = () => {
+  //   setPasswordMatch(password.current.value === rePassword.current.value);
+  // };
 
-  const handleRePasswordChange = () => {
-    setPasswordMatch(password.current.value === rePassword.current.value);
-  };
+  // const handleRePasswordChange = () => {
+  //   setPasswordMatch(password.current.value === rePassword.current.value);
+  // };
   return (
     <div
       className={`min-h-screen flex justify-center items-center flex-col py-10`}
     >
-      <form onSubmit={handleSubmit}>
+      <h2 className={`text-2xl font-semibold text-[#5776a5] mb-6`}>
+        Signup to Netzoon
+      </h2>
+      <form>
         <div>
           <div
             className={`flex items-center justify-between mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
@@ -188,7 +192,7 @@ const SignUp = () => {
               ))}
             </select>
           </div>
-          <div
+          {/* <div
             className={`flex items-center justify-between mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
           >
             <label htmlFor="email" className={`text-xl`}>
@@ -575,15 +579,20 @@ const SignUp = () => {
                 onChange={handleBackIdPhotoChange}
               />
             </div>
-          </div>
+          </div>*/}
         </div>
-        <button
-          disabled={!passwordMatch}
+        {/* <button
           type="submit"
           className={`w-24 flex justify-center items-center border-2 bg-[#5776a5] border-[#5776a5] rounded-xl text-white hover:bg-transparent hover:text-[#5776a5] duration-300`}
         >
-          {t("submit")}
-        </button>
+          {t("Next")}
+        </button> */}
+        <Link
+          className={`border-2 border-[#5776a5] px-4 py-1 rounded-lg bg-[#5776a5] hover:bg-transparent text-white hover:text-[#5776a5] duration-300`}
+          to={selectedOption}
+        >
+          Next
+        </Link>
       </form>
     </div>
   );

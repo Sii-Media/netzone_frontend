@@ -2,15 +2,17 @@ import React from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import MainSection from "../../../components/UI/MainSection";
 
-const CurrentUserFollowers = () => {
+const CurrentUserFollowings = () => {
   const data = useLoaderData();
   console.log(data);
   return (
     <MainSection className={`!mt-52 md:!mt-24 min-h-screen`}>
       <h2 className="text-2xl font-semibold pb-4 border-b border-b-gray-300 mb-4">
-        Followers
+        Followings
       </h2>
-      {data.length === 0 && <p className={`text-center text-3xl font-bold`}>No Followers</p>}
+      {data.length === 0 && (
+        <p className={`text-center text-3xl font-bold`}>No Followings</p>
+      )}
       <ul>
         {data.map((ele) => (
           <li>
@@ -31,15 +33,15 @@ const CurrentUserFollowers = () => {
   );
 };
 
-export default CurrentUserFollowers;
-export const currentUserFollowersLoader = async () => {
+export default CurrentUserFollowings;
+export const currentUserFollowingsLoader = async () => {
   if (window.localStorage.getItem("user")) {
     console.log(true);
     const userCurrentPrOfileId = JSON.parse(window.localStorage.getItem("user"))
       .result._id;
     console.log(userCurrentPrOfileId);
     const response = await fetch(
-      `https://net-zoon.onrender.com/user/getUserFollowers/${userCurrentPrOfileId}`
+      `https://net-zoon.onrender.com/user/getUserFollowings/${userCurrentPrOfileId}`
     );
     const data = await response.json();
     console.log(data);

@@ -9,10 +9,13 @@ import ShareLink from "../UI/ShareLink";
 const User = () => {
   const [user, setUser] = useState(null);
   const data = useLoaderData();
+  console.log(data);
   const [followStatus, setFollowStatus] = useState(
-    data.data.followers.includes(
-      JSON.parse(window.localStorage.getItem("user")).result._id
-    )
+    window.localStorage.getItem("user")
+      ? data.data.followers.includes(
+          JSON.parse(window.localStorage.getItem("user")).result._id
+        )
+      : false
   );
   console.log();
   const handleFollowButton = () => {
@@ -72,7 +75,7 @@ const User = () => {
               <span className={`mr-2 text-gray-600 pt-[0.1rem]`}>
                 {data.data.averageRating}
               </span>
-              <RatingSystem  value={data.data.averageRating} />
+              <RatingSystem value={data.data.averageRating} />
               <span className={`ml-2 text-gray-600`}>
                 ({data.data.totalRatings}Reviews)
               </span>

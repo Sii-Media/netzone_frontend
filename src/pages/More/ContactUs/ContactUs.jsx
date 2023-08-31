@@ -40,7 +40,9 @@ const ContactUs = () => {
           </Link>
         </li>
       </ul>
-      <button className={`mb-2`}>Chat with Netzoon</button>
+      <button className={`mb-2 px-4 py-2 bg-[#5776a5] self-center rounded-3xl text-white`}>
+        Chat with Netzoon
+      </button>
       <button className={`self-center`}>
         <Link
           to="mailNetzoon"

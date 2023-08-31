@@ -14,7 +14,7 @@ import Contract from "./pages/More/More";
 import Notification, {
   loaderNotifications,
 } from "./pages/Notification/Notification";
-import Products from "./pages/Products/Products";
+import Products, { addonLoader } from "./pages/Products/Addon";
 import Services from "./pages/Services/Services";
 import Advertisement, {
   advertisementLoader,
@@ -95,8 +95,12 @@ import { productsCurrentUserLoader } from "./pages/Profile/Profile";
 import More from "./pages/More/More";
 import ContactUs from "./pages/More/ContactUs/ContactUs";
 import LegalAdvice from "./pages/More/LegalAdvice/LegalAdvice";
-import Views from "./pages/Profile/Views/Views";
-import CurrentUserFollowers from "./pages/Profile/Followers/CurrentUserFollowers";
+import Views, {
+  currentUserViewsLoader,
+} from "./pages/Profile/CurrentUserViews/CurrentUserViews";
+import CurrentUserFollowers, {
+  currentUserFollowersLoader,
+} from "./pages/Profile/Followers/CurrentUserFollowers";
 import Opinions, {
   opinionsAction,
 } from "./pages/More/ContactUs/Opinions/Opinions";
@@ -110,6 +114,21 @@ import Question, {
 import SpecialRequest, {
   specialRequestAction,
 } from "./pages/More/ContactUs/SpecialRequest/SpecialRequest";
+import CurrentUserViews from "./pages/Profile/CurrentUserViews/CurrentUserViews";
+import CurrentUserFollowings, {
+  currentUserFollowingsLoader,
+} from "./pages/Profile/Followings/CurrentUserFollowings";
+import { SendMail } from "./pages/More/ContactUs/SendMail/SendMail";
+import SignUpInfoPage from "./pages/SignUpPage/SignUpInfoPage/SignUpInfoPage";
+import ProsAndSers, {
+  prosAndSersLoader,
+} from "./pages/User/Sub/ProsAndSers/ProsAndSers";
+import ProServFac, {
+  ProServFacLoader,
+} from "./pages/Factory/FactoryProfile/Sub/ProServFac";
+import Addon from "./pages/Products/Addon";
+import FacProd, { facProdLoader } from "./pages/Factory/FacProd/FacProd";
+import CarBrand, { carBrandLoader } from "./pages/Products/CarBrand/CarBrand";
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -237,7 +256,8 @@ const App = () => {
           children: [
             {
               path: "/catagories/factory/:typeId/:currency/:facId",
-              element: <p></p>,
+              element: <ProServFac />,
+              loader: ProServFacLoader,
             },
             {
               path: "ads",
@@ -249,6 +269,11 @@ const App = () => {
               element: <AboutFac />,
             },
           ],
+        },
+        {
+          path: "/catagories/factory/:typeId/:currency/:facId/:productId",
+          element: <FacProd />,
+          loader: facProdLoader,
         },
         {
           path: "/catagories/governmental",
@@ -292,6 +317,11 @@ const App = () => {
           ],
         },
         {
+          path: "/catagories/:routeId/:userId/:prodId",
+          element: <ProsAndSers />,
+          loader: prosAndSersLoader,
+        },
+        {
           path: "/catagories/:routeId/:userId/followings",
           element: <Followings />,
           loader: followingsLoader,
@@ -319,16 +349,18 @@ const App = () => {
         },
         {
           path: "/profile/followings",
-          element: <Followings />,
+          element: <CurrentUserFollowings />,
+          loader: currentUserFollowingsLoader,
         },
         {
           path: "/profile/followers",
           element: <CurrentUserFollowers />,
-          loader: followersLoader,
+          loader: currentUserFollowersLoader,
         },
         {
           path: "/profile/views",
-          element: <Views />,
+          element: <CurrentUserViews />,
+          loader: currentUserViewsLoader,
         },
         {
           path: "/login",
@@ -337,6 +369,10 @@ const App = () => {
         {
           path: "/signup",
           element: <SignUpPage />,
+        },
+        {
+          path: "/signup/:userType",
+          element: <SignUpInfoPage />,
         },
         {
           path: "/more",
@@ -370,15 +406,21 @@ const App = () => {
         },
         {
           path: "/more/contactUs/mailNetzoon",
-          element: <p></p>,
+          element: <SendMail />,
         },
         {
           path: "/more/legalAdvice",
           element: <LegalAdvice />,
         },
         {
-          path: "/products",
-          element: <Products />,
+          path: "add/:addon",
+          element: <Addon />,
+          loader: addonLoader,
+        },
+        {
+          path: "add/:addon/:carBrand",
+          element: <CarBrand />,
+          loader: carBrandLoader,
         },
         {
           path: "/services",

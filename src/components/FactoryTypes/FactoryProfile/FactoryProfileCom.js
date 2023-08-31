@@ -114,6 +114,7 @@ const User = () => {
           className={({ isActive }) =>
             [
               isActive ? "text-[#5776a5]" : "text-black",
+              "w-10",
               "block",
               "text-center",
               "hover:text-[#5776a5]",
@@ -125,7 +126,7 @@ const User = () => {
           end
           to={`/catagories/factory/${param.typeId}/${selectedCurrency}/${param.facId}`}
         >
-          Products
+          Production Services
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -142,7 +143,7 @@ const User = () => {
           end
           to="ads"
         >
-          Ads
+          Products
         </NavLink>
         <NavLink
           className={({ isActive }) =>

@@ -5,14 +5,14 @@ import { AiOutlinePlusSquare } from "react-icons/ai";
 import { useTranslation } from "react-i18next";
 // import "./Adda.css";
 const options = [
-  { value: "products", label: "Products", path: "/products" },
-  { value: "services", label: "Services", path: "/services" },
-  { value: "deal", label: "Deal", path: "/deal" },
-  { value: "advertisement", label: "Advertisement", path: "/advertisement" },
-  { value: "news", label: "News", path: "/news" },
-  { value: "cars", label: "Cars", path: "/cars" },
-  { value: "aircraft", label: "Aircraft", path: "/aircraft" },
-  { value: "realestate", label: "Real Estate", path: "/realestate" },
+  { value: "products", label: "Products", path: "add/products" },
+  { value: "services", label: "Services", path: "add/services" },
+  { value: "deal", label: "Deal", path: "add/deal" },
+  { value: "advertisement", label: "Advertisement", path: "add/advertisement" },
+  { value: "news", label: "News", path: "add/news" },
+  { value: "cars", label: "Cars", path: "add/cars" },
+  { value: "aircraft", label: "Aircraft", path: "add/aircraft" },
+  { value: "realestate", label: "Real Estate", path: "add/realestate" },
 ];
 
 const DropdownIndicator = (props) => {

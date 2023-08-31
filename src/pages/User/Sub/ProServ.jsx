@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouteLoaderData } from "react-router-dom";
+import { Link, useRouteLoaderData } from "react-router-dom";
 import MainSection from "../../../components/UI/MainSection";
 import Card from "../../../components/UI/Card";
 
@@ -15,18 +15,20 @@ const ProServ = () => {
               <li
                 className={`shadow-[0_3px_10px_rgb(0,0,0,0.2)] p-2 mb-8 w-full rounded-lg [&>*]:mb-2`}
               >
-                <h2 className={`text-[#5776a5] text-2xl font-semibold`}>
-                  {ele.title}
-                </h2>
-                <p className={`text-gray-600 text-xl`}>{ele.description}</p>
-                <div>
-                  <span>From: {ele.from}</span>
-                  <span>To: {ele.to}</span>
-                </div>
-                <p className={`text-green-600`}>
-                  {ele.price}
-                  <span>AED</span>
-                </p>
+                <Link to={ele._id}>
+                  <h2 className={`text-[#5776a5] text-2xl font-semibold`}>
+                    {ele.title}
+                  </h2>
+                  <p className={`text-gray-600 text-xl`}>{ele.description}</p>
+                  <div>
+                    <span>From: {ele.from}</span>
+                    <span>To: {ele.to}</span>
+                  </div>
+                  <p className={`text-green-600`}>
+                    {ele.price}
+                    <span>AED</span>
+                  </p>
+                </Link>
               </li>
             ))
           ) : (
@@ -37,6 +39,7 @@ const ProServ = () => {
         ) : data.proServData.length > 0 ? (
           data.proServData.map((ele) => (
             <Card
+              path={ele._id}
               className={`!w-40 !h-40`}
               imgSrc={ele.imageUrl}
               imgAlt={ele.title || ele.name}

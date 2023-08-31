@@ -78,10 +78,7 @@ const CarDetailsComp = () => {
         </div>
         <div className={`mt-8`}>
           <ul className={`flex p-2 bg-[#5776a5] bg-opacity-20 rounded-xl`}>
-            <li>
-              <p>No Photos</p>
-            </li>
-
+            <li>{results.carImages.length === 0 && <p>No Photos</p>}</li>
             {results.carImages.length > 0 &&
               results.carImages.map((ele, i) => (
                 <li key={i} className={`bg-white rounded-lg mr-2`}>
@@ -95,8 +92,6 @@ const CarDetailsComp = () => {
                     />
                   </div>
                   <div className={`py-2`}>
-                    <ShareLink />
-                    Replace ShareLink with your actual component
                     <ShareLink />
                   </div>
                 </li>

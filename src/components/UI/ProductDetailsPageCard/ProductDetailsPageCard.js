@@ -3,6 +3,7 @@ import RatingSystem from "../RatingSystem";
 import ShareLink from "../ShareLink";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import MainSection from "../MainSection";
+
 const ProductDetailsPageCard = ({
   title,
   description,
@@ -19,20 +20,47 @@ const ProductDetailsPageCard = ({
   category,
 }) => {
   const [heart, setHeart] = useState(false);
+
+  // Get the existing cart items from local storage or initialize an empty array
+  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
   const handleHeartState = () => {
     setHeart(!heart);
   };
+
+  const addToCartHandler = () => {
+    // Create the item object with necessary information
+    const item = {
+      title,
+      imgSrc,
+      Price,
+      quantity: 1, // You can adjust this as needed
+    };
+
+    // Add the item to the cartItems array
+    cartItems.push(item);
+
+    // Save the updated cart items back to local storage
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  };
+
   return (
     <MainSection className={`!mt-52 md:!mt-24 w-[90%] md:w-[70%] mx-auto`}>
       <div className={`flex flex-col`}>
-        <div className={`flex`}>
-          <div className={`mr-4 p-1 bg-[#5776a5] bg-opacity-20 rounded-lg`}>
+        <div className={`flex flex-col lg:flex-row`}>
+          <div
+            className={`mr-4 p-1 bg-[#5776a5] bg-opacity-20 rounded-lg self-start`}
+          >
             <img src={imgSrc} alt={imgAlt} className={`w-[30rem] rounded-sm`} />
           </div>
-          <div className={`flex flex-col p-2`}>
+          <div
+            className={`flex flex-col p-2 w-full text-center lg:w-[50%] h-1/2`}
+          >
             <div className={`flex flex-col`}>
               <p className={`text-3xl font-bold mb-4`}>{title}</p>
-              <p className={`text-xl font-medium mb-4`}>{description}</p>
+              <p className={`text-xl font-medium mb-4 h-[50%] overflow-hidden`}>
+                {description}
+              </p>
             </div>
             <div>
               <h2 className={`text-2xl mb-4 text-[#5776a5]`}>{Price}</h2>
@@ -44,7 +72,7 @@ const ProductDetailsPageCard = ({
                   ({totalRatings}Reviews)
                 </span>
               </div>
-              <div className={`flex justify-between items-center w-[21%]`}>
+              <div className={`flex justify-between items-center`}>
                 <ShareLink />
                 {!heart ? (
                   <AiOutlineHeart
@@ -57,6 +85,12 @@ const ProductDetailsPageCard = ({
                     onClick={handleHeartState}
                   />
                 )}
+                <button
+                  onClick={addToCartHandler}
+                  className={`bg-[#5776a5] text-lg text-white px-1 rounded-lg border-2 border-[#5776a5] hover:text-[#5776a5]  hover:bg-transparent duration-300`}
+                >
+                  Add to Cart
+                </button>
               </div>
             </div>
           </div>

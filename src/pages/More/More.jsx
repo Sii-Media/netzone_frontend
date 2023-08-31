@@ -8,7 +8,6 @@ const More = () => {
   const logOutHandler = () => {
     window.localStorage.removeItem("user");
     window.location.href = "/profile";
-
   };
   return (
     <MainSection className={`min-h-screen !mt-52 md:!mt-24`}>
