@@ -1,10 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const CustomNavLink = ({ path, children }) => {
+const CustomNavLink = ({ path, children, onClick }) => {
   return (
     <li className={``}>
       <NavLink
+        onClick={onClick}
         to={path}
         className={({ isActive }) =>
           [

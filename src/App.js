@@ -1,5 +1,9 @@
 import React from "react";
-import { I18nextProvider, initReactI18next } from "react-i18next";
+import {
+  I18nextProvider,
+  initReactI18next,
+  useTranslation,
+} from "react-i18next";
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import translationEn from "./locales/en/translation.json";
@@ -94,7 +98,9 @@ import ProductsCurrentUser from "./pages/Profile/ProductsCurrentUser";
 import { productsCurrentUserLoader } from "./pages/Profile/Profile";
 import More from "./pages/More/More";
 import ContactUs from "./pages/More/ContactUs/ContactUs";
-import LegalAdvice from "./pages/More/LegalAdvice/LegalAdvice";
+import LegalAdvice, {
+  legalAdviceLoader,
+} from "./pages/More/LegalAdvice/LegalAdvice";
 import Views, {
   currentUserViewsLoader,
 } from "./pages/Profile/CurrentUserViews/CurrentUserViews";
@@ -129,6 +135,44 @@ import ProServFac, {
 import Addon from "./pages/Products/Addon";
 import FacProd, { facProdLoader } from "./pages/Factory/FacProd/FacProd";
 import CarBrand, { carBrandLoader } from "./pages/Products/CarBrand/CarBrand";
+import FollowingsFac, {
+  followingsFacLoader,
+} from "./pages/Factory/FactoryProfile/Sub/Followings/FollowingsFac";
+import FollowersFac, {
+  followersFacLoader,
+} from "./pages/Factory/FactoryProfile/Sub/Followers/FollowersFac";
+import SelectFromOurProducts, {
+  selectFromOurProductsLoader,
+} from "./pages/Products/SelectFromOurProducts/SelectFromOurProducts";
+import AddDeliveryService from "./pages/Products/AddDeliveryService/AddDeliveryService";
+import RateUser, { rateUserLoader } from "./pages/User/RateUser/RateUser";
+import AddAccount from "./pages/Profile/AddAccount/AddAccount";
+import SwitchAccount, {
+  switchAccountLoader,
+} from "./pages/Profile/SwitchAccount/SwitchAccount";
+import PriceSugg, {
+  priceSuggLoader,
+} from "./components/CarDetails/PriceSugg/PriceSugg";
+import AdsSugg, { AdsSuggLoader } from "./pages/AdsDetails/AdsSugg/AdsSugg";
+import UserProducts, {
+  userProductsLoader,
+} from "./pages/Profile/UserProducts/UserProducts";
+import ProfileCredit from "./pages/Profile/ProfileCredit/ProfileCredit";
+import BalanceRequest from "./pages/Profile/BalanceRequest/BalanceRequest";
+import MyOrders, { myOrdersLoader } from "./pages/Profile/MyOrders/MyOrders";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
+import Chats from "./components/Departments/Chats/Chats";
+import ChatsBird from "./pages/Chats/ChatsBird";
+import ChatsCustom from "./pages/Chats/ChatsCustom/ChatsCustom";
+import ProductPriceSugg, {
+  productPriceSuggLoader,
+} from "./components/UI/ProductDetailsPageCard/ProductPriceSugg/ProductPriceSugg";
+import { DeliveryInformation } from "./pages/Cart/DeliveryInformation/DeliveryInformation";
+import CheckOutFormPage from "./pages/CheckOutFormPage/CheckOutFormPage";
+import CheckOutFormComp from "./components/CheckOutFormComp/CheckOutFormComp";
+import OrderDetails, {
+  orderDetailsLoader,
+} from "./pages/Profile/MyOrders/OrderDetails/OrderDetails";
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -144,11 +188,19 @@ i18n
   });
 
 const App = () => {
+  const { t } = useTranslation();
   const currency = useSelector((state) => state.currency.selectedCurrency);
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Root />,
+      errorElement: (
+        <div className={`h-screen flex justify-center items-center`}>
+          <h1 className={`text-base md:text-2xl font-semibold`}>
+            {t("Server is Down Please Try Later")}
+          </h1>
+        </div>
+      ),
       children: [
         {
           index: true,
@@ -159,9 +211,30 @@ const App = () => {
           path: "/auth",
           element: <AuthPage />,
         },
+
         {
           path: "/cart",
           element: <Cart />,
+        },
+        {
+          path: "/cart/paymentgateway",
+          element: (
+            <div className={`mt-52 md:mt-28 min-h-screen`}>
+              <h2 className={`text-[#5776a5] text-center text-2xl`}>
+                Your order is one step away from you
+              </h2>
+              <CheckOutFormComp
+                toPayAmount={
+                  +JSON.parse(window.localStorage.getItem("lastTotalPrice"))
+                }
+                url={"/deliveryInformation"}
+              />
+            </div>
+          ),
+        },
+        {
+          path: "/deliveryInformation",
+          element: <DeliveryInformation />,
         },
         {
           path: "/notification",
@@ -193,6 +266,26 @@ const App = () => {
           loader: adsDetailsLoader,
         },
         {
+          path: "/advertisements/:adId/paymentgateway",
+          element: (
+            <div className={`mt-52 md:mt-28 min-h-screen`}>
+              <h2 className={`text-[#5776a5] text-center text-2xl`}>
+                Your order is one step away from you
+              </h2>
+              <CheckOutFormComp
+                toPayAmount={+JSON.parse(localStorage.getItem("adPrice"))}
+                url={"/"}
+              />
+            </div>
+          ),
+        },
+
+        {
+          path: "/advertisements/:adId/priceSuggAds",
+          element: <AdsSugg />,
+          loader: AdsSuggLoader,
+        },
+        {
           path: "/:department/:category/:currency",
           element: <CategoryAsAGrid />,
           loader: categoryAsAGridLoader,
@@ -203,6 +296,11 @@ const App = () => {
           loader: productDetailsLoader,
         },
         {
+          path: "/:department/:category/:currency/:productId/suggestPrice",
+          element: <ProductPriceSugg />,
+          loader: productPriceSuggLoader,
+        },
+        {
           path: "/:department/:currency",
           element: <DepartmentAsAGridWithCountry />,
           loader: DepartmentAsAGridWithCountryLoader,
@@ -211,6 +309,11 @@ const App = () => {
           path: "/cars/:currency/:carId",
           element: <CarDetailsPage />,
           loader: CarDetailsPageLoader,
+        },
+        {
+          path: "/cars/:currency/:carId/priceSugg",
+          element: <PriceSugg />,
+          loader: priceSuggLoader,
         },
         {
           path: "/planes/:currency/:planeId",
@@ -233,9 +336,43 @@ const App = () => {
           loader: oneTypeDealsListPageLoader,
         },
         {
+          path:
+            "/deals/:currency/dealsTypes/:dealsType/:currency/paymentgateway",
+          element: (
+            <div className={`mt-52 md:mt-28 min-h-screen`}>
+              <h2 className={`text-[#5776a5] text-center text-2xl`}>
+                Your order is one step away from you
+              </h2>
+              <CheckOutFormComp
+                toPayAmount={
+                  +JSON.parse(window.localStorage.getItem("dealFinalPrice"))
+                }
+                url={"/"}
+              />
+            </div>
+          ),
+        },
+        {
           path: "/deals/:currency/dealsTypes/:dealsType/:currency/:dealId",
           element: <DealDetails />,
           loader: dealDetailsLoader,
+        },
+        {
+          path:
+            "/deals/:currency/dealsTypes/:dealsType/:currency/:dealId/paymentgateway",
+          element: (
+            <div className={`mt-52 md:mt-28 min-h-screen`}>
+              <h2 className={`text-[#5776a5] text-center text-2xl`}>
+                Your order is one step away from you
+              </h2>
+              <CheckOutFormComp
+                toPayAmount={
+                  +JSON.parse(window.localStorage.getItem("dealFinalPrice"))
+                }
+                url={"/"}
+              />
+            </div>
+          ),
         },
         {
           path: "/catagories/factory",
@@ -271,6 +408,16 @@ const App = () => {
           ],
         },
         {
+          path: "/catagories/factory/:typeId/:currency/:facId/followings",
+          element: <FollowingsFac />,
+          loader: followingsFacLoader,
+        },
+        {
+          path: "/catagories/factory/:typeId/:currency/:facId/followers",
+          element: <FollowersFac />,
+          loader: followersFacLoader,
+        },
+        {
           path: "/catagories/factory/:typeId/:currency/:facId/:productId",
           element: <FacProd />,
           loader: facProdLoader,
@@ -292,18 +439,18 @@ const App = () => {
           loader: emInfoLoader,
         },
         {
-          path: "/catagories/:routeId",
+          path: "/catagories/:routeId/:currency",
           element: <SingleCataPage />,
           loader: singleCataPageLoader,
         },
         {
-          path: "/catagories/:routeId/:userId",
+          path: "/catagories/:routeId/:currency/:userId",
           element: <UserPage />,
           loader: userPageLoader,
           id: "user",
           children: [
             {
-              path: "/catagories/:routeId/:userId",
+              path: "/catagories/:routeId/:currency/:userId",
               element: <ProServ />,
             },
             {
@@ -317,17 +464,27 @@ const App = () => {
           ],
         },
         {
-          path: "/catagories/:routeId/:userId/:prodId",
+          path: "/catagories/:routeId/:currency/:userId/rateUser",
+          element: <RateUser />,
+          loader: rateUserLoader,
+        },
+        {
+          path: "/catagories/:routeId/:currency/:userId/:prodId",
           element: <ProsAndSers />,
           loader: prosAndSersLoader,
         },
         {
-          path: "/catagories/:routeId/:userId/followings",
+          path: "/catagories/:routeId/:currency/:userId/:prodId/suggestPrice",
+          element: <ProductPriceSugg />,
+          loader: productPriceSuggLoader,
+        },
+        {
+          path: "/catagories/:routeId/:currency/:userId/followings",
           element: <Followings />,
           loader: followingsLoader,
         },
         {
-          path: "/catagories/:routeId/:userId/followers",
+          path: "/catagories/:routeId/:currency/:userId/followers",
           element: <Followers />,
           loader: followersLoader,
         },
@@ -348,6 +505,15 @@ const App = () => {
           ],
         },
         {
+          path: "/profile/addAccount",
+          element: <AddAccount />,
+        },
+        {
+          path: "/profile/switchAccount",
+          element: <SwitchAccount />,
+          loader: switchAccountLoader,
+        },
+        {
           path: "/profile/followings",
           element: <CurrentUserFollowings />,
           loader: currentUserFollowingsLoader,
@@ -361,6 +527,29 @@ const App = () => {
           path: "/profile/views",
           element: <CurrentUserViews />,
           loader: currentUserViewsLoader,
+        },
+        {
+          path: "/profile/userProducts",
+          element: <UserProducts />,
+          loader: userProductsLoader,
+        },
+        {
+          path: "/profile/myCredit",
+          element: <ProfileCredit />,
+        },
+        {
+          path: "/profile/myCredit/balanceRequest",
+          element: <BalanceRequest />,
+        },
+        {
+          path: "/profile/myOrders",
+          element: <MyOrders />,
+          loader: myOrdersLoader,
+        },
+        {
+          path: "/profile/myOrders/:orderId",
+          element: <OrderDetails />,
+          loader: orderDetailsLoader,
         },
         {
           path: "/login",
@@ -411,11 +600,35 @@ const App = () => {
         {
           path: "/more/legalAdvice",
           element: <LegalAdvice />,
+          loader: legalAdviceLoader,
         },
         {
           path: "add/:addon",
           element: <Addon />,
           loader: addonLoader,
+        },
+        {
+          path: "/add/advertisement/paymentgateway",
+          element: (
+            <div className={`mt-52 md:mt-28 min-h-screen`}>
+              <h2 className={`text-[#5776a5] text-center text-2xl`}>
+                Your order is one step away from you
+              </h2>
+              <CheckOutFormComp
+                toPayAmount={+JSON.parse(window.localStorage.getItem("adFees"))}
+                url={"/"}
+              />
+            </div>
+          ),
+        },
+        {
+          path: "add/selectFromOurProducts/:currency",
+          element: <SelectFromOurProducts />,
+          loader: selectFromOurProductsLoader,
+        },
+        {
+          path: "add/addDeliveryService",
+          element: <AddDeliveryService />,
         },
         {
           path: "add/:addon/:carBrand",
@@ -471,6 +684,23 @@ const App = () => {
           loader: searchedDepLoader,
         },
       ],
+    },
+    {
+      path: "/chats",
+      element: <ChatsBird />,
+    },
+    {
+      path: "/chatsCustom",
+      element: <ChatsCustom />,
+    },
+    {
+      path: "/payFormTry",
+      element: (
+        <div>
+          <CheckOutFormPage toPayAmount={100} />
+          <CheckOutFormComp toPayAmount={100} url={"/chats"} />
+        </div>
+      ),
     },
   ]);
   return (

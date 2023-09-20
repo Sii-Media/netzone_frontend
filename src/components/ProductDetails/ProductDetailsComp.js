@@ -4,9 +4,10 @@ import ProductDetailsPageCard from "../UI/ProductDetailsPageCard/ProductDetailsP
 
 const ProductDetailsComp = () => {
   const data = useLoaderData();
-  console.log(data);
+
   return (
     <ProductDetailsPageCard
+      id={data._id}
       imgSrc={data.imageUrl}
       imgAlt={data.name}
       title={data.name}
@@ -17,6 +18,7 @@ const ProductDetailsComp = () => {
       imgs={data.images}
       category={data.category.name}
       owner={data.owner.username}
+      ownerType={data.owner.userType}
       quantity={data.quantity}
       condition={data.condition}
       guarantee={data.guarantee}

@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import MainSection from "../UI/MainSection";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const SearchedItem = () => {
   const data = useLoaderData();
-  console.log(data);
   const [toUseData, setToUseData] = useState({ id: "", data: [] });
+
+  // console.log(toUseData);
   const [filterText, setFilterText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const currency = useSelector((state) => state.currency.selectedCurrency);
@@ -59,11 +61,12 @@ const SearchedItem = () => {
     );
     setFilteredData(filteredItems);
   }, [filterText, toUseData.data]);
+  const { t } = useTranslation();
   return (
-    <MainSection className={`flex flex-col justify-center items-center mb-40`}>
+    <MainSection className={`flex flex-col items-center mb-40 min-h-screen`}>
       <div className={`flex flex-col mb-10`}>
         <label className={`text-xl text-[#5776a5] mb-4`} htmlFor="search">
-          Filter your preferences :
+          {t("Filter your preferences")}:
         </label>
         <input
           id="search"
@@ -76,36 +79,41 @@ const SearchedItem = () => {
       </div>
       {!filteredData.length > 0 && <p>No data to show</p>}
       <ul
-        className={`flex flex-col md:flex-row  items-center  md:items-start  flex-wrap md:w-[calc(18rem*3+3rem)] mx-auto`}
+        className={`flex flex-col lg:flex-row  items-center  md:items-start  flex-wrap w-full lg:w-[calc(18rem*3+3rem)] mx-auto`}
       >
         {(filterText.length === 0 ? toUseData.data : filteredData).map(
           (ele, i) => (
             <li
               key={i}
-              className={`w-full md:w-72 h-32 overflow-hidden bg-[#5776a5] bg-opacity-50 p-2 rounded-md mb-4 mr-4`}
+              className={`w-full lg:w-72 h-32 overflow-hidden bg-[#5776a5] bg-opacity-50 p-2 rounded-md mb-4 mr-4`}
             >
-              {/* {console.log(ele)} */}
+         
               <Link
                 to={
                   data.id === "local_company" ||
                   data.id === "car" ||
                   data.id === "real_estate"
-                    ? `/catagories/${ele.userType}/${ele._id}`
+                    ? `/catagories/${ele.userType}/${currency}/${ele._id}`
                     : data.id === "products"
-                    ? `/${ele.category.name}/${currency}`
-                    : "/"
+                    ? `/catagories/${
+                        ele.owner && ele.owner.userType
+                      }/${currency}/${ele.owner && ele.owner._id}/${ele._id}`
+                    : data.id === "advertisements"
+                    ? `/advertisements/${ele._id}`
+                    : data.id === "civilAirCraft"
+                    ? `/catagories/planes/${currency}/${ele.creator._id}/${ele._id}`
+                    : ""
                 }
                 className={`flex flex-col`}
               >
-                {console.log(data.id)}
                 <div className={`flex items-center`}>
                   <img
-                  loading="lazy"
+                    loading="lazy"
                     src={ele.img}
                     alt={ele.name}
                     className={`w-20 rounded-md h-20`}
                   />
-                  <h3 className={`ml-2 text-black text-2xl font-semibold`}>
+                  <h3 className={`ml-2 text-black text-xl font-semibold `}>
                     {ele.name}
                   </h3>
                 </div>

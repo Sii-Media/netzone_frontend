@@ -5,12 +5,13 @@ import MultiItemCarousel from "../../UI/MultiItemCarousel";
 import Card from "../../UI/Card";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import useCarouselLogic from "../../../hooks/useCarouselHook";
 
 const Perfume = () => {
   const currency = useSelector((state) => state.currency.selectedCurrency);
 
   const data = useLoaderData();
-  const isCarousel = data[5].results.length >= 5 ? true : false;
+  const isCarousel = useCarouselLogic(5);
   const { t } = useTranslation();
   const items = data[5].results.map((ele) => (
     <Card

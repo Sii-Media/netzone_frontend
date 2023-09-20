@@ -11,23 +11,29 @@ const Comments = () => {
   console.log(commentRef);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const fromData = new FormData();
-    fromData.append(
-      "userId",
-      JSON.parse(window.localStorage.getItem("user")).result._id
-    );
-    fromData.append("text", commentRef.current.value);
-    const response = await fetch(
-      `https://net-zoon.onrender.com/news/${params.newId}/comment`,
-      {
-        method: "POST",
-        body: fromData,
-      }
-    );
+    const user = JSON.parse(window.localStorage.getItem("user"));
+
+    if (!user) {
+      // Display a window.alert and return early
+      window.alert("Please Login");
+      return; // Exit the function without executing the rest of the code
+    }
+
+    const formData = new FormData();
+    formData.append("userId", user.result._id);
+    formData.append("text", commentRef.current.value);
+    const baseUrl = process.env.REACT_APP_BASE_URL;
+
+    const response = await fetch(baseUrl + `/news/${params.newId}/comment`, {
+      method: "POST",
+      body: formData,
+    });
+
     const data = await response.json();
     window.location.reload();
     console.log(data);
   };
+
   console.log(data);
   return (
     <MainSection className={`!mt-52 md:!mt-28 min-h-screen`}>
@@ -80,9 +86,9 @@ const Comments = () => {
 export default Comments;
 export const commentsLoader = async ({ params }) => {
   const newId = params.newId;
-  const response = await fetch(
-    `https://net-zoon.onrender.com/news/${newId}/comments`
-  );
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
+  const response = await fetch(baseUrl + `/news/${newId}/comments`);
   const data = await response.json();
   return data;
 };

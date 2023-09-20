@@ -7,9 +7,8 @@ const Factory = () => {
 
 export default Factory;
 export const factoryLoader = async () => {
-  const response = await fetch(
-    `https://net-zoon.onrender.com/categories/factories`
-  );
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+  const response = await fetch(baseUrl + `/categories/factories`);
   const data = await response.json();
   console.log(data);
   return data;

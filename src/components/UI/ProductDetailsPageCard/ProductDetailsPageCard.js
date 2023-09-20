@@ -3,8 +3,13 @@ import RatingSystem from "../RatingSystem";
 import ShareLink from "../ShareLink";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import MainSection from "../MainSection";
+import { getCurrencySymbol } from "../../../funcs/Currency";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const ProductDetailsPageCard = ({
+  id,
   title,
   description,
   imgSrc,
@@ -15,9 +20,12 @@ const ProductDetailsPageCard = ({
   imgs,
   quantity,
   owner,
+  ownerType,
   condition,
   guarantee,
   category,
+  isService,
+  ishidden,
 }) => {
   const [heart, setHeart] = useState(false);
 
@@ -31,9 +39,12 @@ const ProductDetailsPageCard = ({
   const addToCartHandler = () => {
     // Create the item object with necessary information
     const item = {
+      id,
       title,
       imgSrc,
       Price,
+      owner,
+      ownerType,
       quantity: 1, // You can adjust this as needed
     };
 
@@ -42,38 +53,55 @@ const ProductDetailsPageCard = ({
 
     // Save the updated cart items back to local storage
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    window.alert("Item has been Added");
+    // calculate the lastTotalPrice of every item in cartItems here before reloading and set lastTotalPrice item in the localStorage
+    window.location.reload();
   };
-
+  const currencySymbol = useSelector((state) =>
+    getCurrencySymbol(state.currency.selectedCurrency)
+  );
+  const { t } = useTranslation();
   return (
     <MainSection className={`!mt-52 md:!mt-24 w-[90%] md:w-[70%] mx-auto`}>
-      <div className={`flex flex-col`}>
+      <div id={id} className={`flex flex-col`}>
         <div className={`flex flex-col lg:flex-row`}>
           <div
             className={`mr-4 p-1 bg-[#5776a5] bg-opacity-20 rounded-lg self-start`}
           >
-            <img src={imgSrc} alt={imgAlt} className={`w-[30rem] rounded-sm`} />
+            <img src={imgSrc} alt={imgAlt} className={`w-full rounded-sm`} />
           </div>
           <div
-            className={`flex flex-col p-2 w-full text-center lg:w-[50%] h-1/2`}
+            className={`flex flex-col p-2 w-full text-center md:text-left lg:w-[50%] h-1/2`}
           >
             <div className={`flex flex-col`}>
-              <p className={`text-3xl font-bold mb-4`}>{title}</p>
+              <p className={`text-3xl font-bold mb-4 text-center`}>{title}</p>
               <p className={`text-xl font-medium mb-4 h-[50%] overflow-hidden`}>
                 {description}
               </p>
             </div>
             <div>
-              <h2 className={`text-2xl mb-4 text-[#5776a5]`}>{Price}</h2>
+              <h2 className={`text-2xl mb-4 text-[#5776a5]`}>
+                {Price && Price.toLocaleString()} {Price && t(currencySymbol)}
+              </h2>
             </div>
             <div>
-              <div className={`mb-4`}>
+              <div className={`mb-4 flex flex-col items-center justify-center`}>
                 <RatingSystem value={ratingValue} />
                 <span className={`ml-2 text-gray-600`}>
                   ({totalRatings}Reviews)
                 </span>
+                <div className={`block md:hidden`}>
+                  <Link
+                    to="suggestPrice"
+                    className={`block px-4 py-2 mt-2 bg-[#5776a5] rounded-2xl text-sm md:text-base text-white font-medium border-2 duration-300 hover:text-[#5776a5] hover:bg-transparent hover:border-[#5776a5]`}
+                  >
+                    Suggest A Price
+                  </Link>
+                </div>
               </div>
-              <div className={`flex justify-between items-center`}>
+              <div className={`flex justify-between items-center `}>
                 <ShareLink />
+
                 {!heart ? (
                   <AiOutlineHeart
                     className={`text-3xl text-red-500 cursor-pointer`}
@@ -85,20 +113,35 @@ const ProductDetailsPageCard = ({
                     onClick={handleHeartState}
                   />
                 )}
-                <button
-                  onClick={addToCartHandler}
-                  className={`bg-[#5776a5] text-lg text-white px-1 rounded-lg border-2 border-[#5776a5] hover:text-[#5776a5]  hover:bg-transparent duration-300`}
-                >
-                  Add to Cart
-                </button>
+                {!isService && (
+                  <button
+                    onClick={addToCartHandler}
+                    className={`bg-[#5776a5] ${
+                      ishidden && "hidden"
+                    } text-lg text-white px-1 rounded-lg border-2 border-[#5776a5] hover:text-[#5776a5]  hover:bg-transparent duration-300`}
+                  >
+                    Add to Cart
+                  </button>
+                )}
+
+                <div className={`hidden md:block`}>
+                  <Link
+                    to="suggestPrice"
+                    className={`block px-2 py-1 bg-[#5776a5] rounded-2xl text-sm md:text-base text-white font-medium border-2 duration-300 hover:text-[#5776a5] hover:bg-transparent hover:border-[#5776a5]`}
+                  >
+                    Suggest A Price
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div className={`mt-8`}>
-          <ul className={`flex p-2 bg-[#5776a5] bg-opacity-20 rounded-xl`}>
+          <ul
+            className={`grid grid-cols-2 md:grid-cols-4 p-2 bg-[#5776a5] bg-opacity-20 rounded-xl`}
+          >
             {imgs.map((ele, i) => (
-              <li key={i} className={`bg-white rounded-lg mr-2`}>
+              <li key={i} className={`bg-white rounded-lg mr-2 mb-2`}>
                 <div
                   className={`h-40 w-36 overflow-hidden flex items-center justify-center`}
                 >

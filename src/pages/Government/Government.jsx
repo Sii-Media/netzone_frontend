@@ -7,10 +7,9 @@ const Government = () => {
 
 export default Government;
 export const governmentLoader = async () => {
-  const response = await fetch(
-    `https://net-zoon.onrender.com/categories/govermental`
-  );
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+  const response = await fetch(baseUrl + `/categories/govermental`);
   const data = await response.json();
   console.log(data);
-  return {data};
+  return { data };
 };

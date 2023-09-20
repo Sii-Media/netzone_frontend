@@ -6,10 +6,11 @@ import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { BiMessageDetail } from "react-icons/bi";
 import RatingSystem from "../UI/RatingSystem";
 import ShareLink from "../UI/ShareLink";
+import { useTranslation } from "react-i18next";
 const User = () => {
   const [user, setUser] = useState(null);
   const data = useLoaderData();
-  console.log(data);
+
   const [followStatus, setFollowStatus] = useState(
     window.localStorage.getItem("user")
       ? data.data.followers.includes(
@@ -17,12 +18,11 @@ const User = () => {
         )
       : false
   );
-  console.log();
+
   const handleFollowButton = () => {
     setFollowStatus(!followStatus);
   };
-  console.log(data);
-  console.log();
+
   const param = useParams();
   useEffect(() => {
     if (window.localStorage.getItem("user")) {
@@ -33,84 +33,88 @@ const User = () => {
     setFollowStatus(!followStatus);
     const formData = new FormData();
     formData.append("currentUserId", user.result._id);
+    const baseUrl = process.env.REACT_APP_BASE_URL;
+
     const response = await fetch(
-      `https://net-zoon.onrender.com/user/toggleFollow/${param.userId}`,
+      baseUrl + `/user/toggleFollow/${param.userId}`,
       {
         method: "PUT",
         body: formData,
       }
     );
     const data = await response.json();
-    console.log(data);
+
   };
 
+  const { t } = useTranslation();
   return (
     <MainSection
-      className={`!mt-28 md:!mt-[4.6rem] !px-0 mb-4 w-full lg:w-[800px] mx-auto relative`}
+      className={`!mt-32 md:!mt-20 !px-0 mb-4 w-full lg:w-[800px] mx-auto relative`}
     >
       <div
-        className={`h-64 overflow-hidden flex justify-center items-center rounded-b-lg w-full md:w-auto`}
+        className={`overflow-hidden flex justify-center items-center rounded-b-lg w-full md:w-auto`}
       >
-        <img src={data.data.coverPhoto} alt={data.data._id} className="" />
+        <img src={data.data.coverPhoto} alt={data.data._id} className="h-60" />
       </div>
-      <div
-        className={`flex items-center justify-between w-[90%] absolute top-56 left-1/2 -translate-x-1/2`}
-      >
+      <div className={`flex items-center justify-between w-[90%] mx-auto`}>
         <img
           src={data.data.profilePhoto}
           alt={data.data._id}
           className={`w-24 h-24 md:w-40 md:h-40 rounded-full  border-4 border-white `}
         />
         <div
-          className={`flex flex-col md:flex-row items-center justify-between w-full h-auto`}
+          className={`flex flex-col mt-9 md:mt-0 md:flex-row  justify-between w-full h-auto`}
         >
           <div className={`ml-8`}>
             <h2 className={`text-2xl font-semibold pt-2`}>
-              {data.data.username}
+              {t(data.data.username)}
             </h2>
             <h3 className={`text-sm font-medium text-gray-600 mb-2`}>
-              {data.data.slogn ? data.data.slogn : "No Slogan to display"}
+              {t(data.data.slogn) ? t(data.data.slogn) : ""}
             </h3>
             <div className={`flex`}>
               <span className={`mr-2 text-gray-600 pt-[0.1rem]`}>
-                {data.data.averageRating}
+                {+data.data.averageRating.toFixed(2)}
               </span>
-              <RatingSystem value={data.data.averageRating} />
+              <Link to="rateUser">
+                <RatingSystem value={data.data.averageRating} />
+              </Link>
               <span className={`ml-2 text-gray-600`}>
-                ({data.data.totalRatings}Reviews)
+                ({data.data.totalRatings}
+                {t("review")})
               </span>
             </div>
           </div>
-          <div className={`flex items-center`}>
+          <div className={`flex items-center ml-8`}>
             <ShareLink />
             <button
               disabled={user === null ? true : false}
               onClick={followButtonHandler}
               className={`px-4 mt-0 bg-[#5776a5] rounded-3xl text-white text-xl font-medium hover:text-[#5776a5] hover:bg-transparent duration-300 border-2 border-[#5776a5] self-center`}
             >
-              {followStatus ? "Following" : "Follow"}
+              {followStatus ? t("unfollow") : t("follow")}
             </button>
           </div>
         </div>
       </div>
-      <div className={`mt-32 md:mt-40 text-xl px-8 w-[90%] mx-auto`}>
-        <p>{data.data.bio}</p>
+      <div className={`mt-12 md:mt-2 text-xl px-8 w-[90%] mx-auto`}>
+        <p>{t(data.data.bio)}</p>
       </div>
       <div className={`flex px-8 items-center mt-2 w-[90%] mx-auto`}>
         <BsLink className={`mr-2`} />
         <a href={data.data.link} target="_blank" rel="noreferrer">
-          {data.data.link}
+          {t(data.data.link)}
         </a>
       </div>
-      <div className="flex justify-center items-center w-[90%] mx-auto">
-        <div className={` mr-8`}>
+      <div className="flex justify-between items-center w-[60%] md:w-[50%] mx-auto mt-4 mb-4">
+        <div className={``}>
           <Link to="followings">
             <span
               className={`text-lg font-semibold flex flex-col items-center`}
             >
               {data.data.followings.length}
             </span>
-            <span>Following</span>
+            <span>{t("following")}</span>
           </Link>
         </div>
         <div className={``}>
@@ -120,8 +124,14 @@ const User = () => {
             >
               {data.data.followers.length}
             </span>
-            <span>Followers</span>
+            <span>{t("followers")}</span>
           </Link>
+        </div>
+        <div className={``}>
+          <span className={`text-lg font-semibold flex flex-col items-center`}>
+            {data.data.profileViews}
+          </span>
+          <span>{t("visitors")}</span>
         </div>
       </div>
       <div
@@ -130,17 +140,18 @@ const User = () => {
         <button
           className={`w-36 md:w-52 flex justify-center items-center p-1 md:p-2 bg-[#5776a5] rounded-2xl text-white text-sm md:text-xl hover:text-[#5776a5] hover:bg-transparent duration-300 border-2 border-[#5776a5]`}
         >
-          <RiMoneyDollarCircleLine /> Live Auction
+          <RiMoneyDollarCircleLine /> {t("Live Auction")}
         </button>
-        <button
+        <Link
+          to="/chats"
           className={`w-36 md:w-52 flex justify-center items-center p-1 md:p-2 bg-[#5776a5] rounded-2xl text-white text-sm md:text-xl hover:text-[#5776a5] hover:bg-transparent duration-300 border-2 border-[#5776a5]`}
         >
           <BiMessageDetail />
-          Customer Support
-        </button>
+          {t("customers service")}
+        </Link>
       </div>
       <nav
-        className={`w-[90%] mx-auto flex justify-between items-center mt-4  border-t-[1px] px-4 border-[#5776a5] [&>*]:text-xl [&>*]:font-semibold [&>*]:p-2`}
+        className={`w-[90%] mx-auto flex justify-between items-center mt-4  border-t-[1px] px-4 border-[#5776a5] [&>*]:text-base md:[&>*]:text-xl [&>*]:font-semibold [&>*]:p-2`}
       >
         <NavLink
           className={({ isActive }) =>
@@ -155,25 +166,25 @@ const User = () => {
             ].join(" ")
           }
           end
-          to={`/catagories/${param.routeId}/${param.userId}`}
+          to={`/catagories/${param.routeId}/${param.currency}/${param.userId}`}
         >
-          {data.data.userType === "local_company" && data.data.isService
-            ? "Services"
-            : "Products"}
-          {data.data.userType === "car" && "Cars"}
-          {data.data.userType === "user" && "Product"}
-          {/* {data.data.isFreeZoon  && "Products"} */}
-          {data.data.userType === "plans" && "Aircraft"}
-          {data.data.userType === "real_estate" && "Real Estate"}
-          {data.data.userType === "trader" && "Products"}
-          {data.data.userType === "delivery_company" && "Services"}
-
-          {/* {data.data.isService ? "Services" : "Products"}
-          {data.data.isService ? "Services" : "Products"}
-          {data.data.isService ? "Services" : "Products"}
-          {data.data.isService ? "Services" : "Products"}
-          {data.data.isService ? "Services" : "Products"}
-          {data.data.isService ? "Services" : "Products"} */}
+          {data.data.userType === "local_company"
+            ? data.data.isService === true
+              ? t("services")
+              : t("products")
+            : data.data.userType === "car"
+            ? t("cars")
+            : data.data.userType === "user"
+            ? t("products")
+            : data.data.userType === "planes"
+            ? t("aircraft")
+            : data.data.userType === "real_estate"
+            ? t("real_estate")
+            : data.data.userType === "trader"
+            ? t("products")
+            : data.data.userType === "delivery_company"
+            ? t("services")
+            : ""}
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -190,7 +201,9 @@ const User = () => {
           end
           to="ads"
         >
-          {data.data.userType === "user" ? "Companies Products" : "Ads"}
+          {data.data.userType === "user"
+            ? t("companies_products")
+            : t("my_ads")}
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -207,7 +220,7 @@ const User = () => {
           to="about"
           end
         >
-          {data.data.userType === "user" ? "Info" : "About Us"}
+          {data.data.userType === "user" ? t("my_info") : t("about_us")}
         </NavLink>
       </nav>
     </MainSection>

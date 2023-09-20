@@ -7,9 +7,9 @@ const Notification = () => {
 
 export default Notification;
 export const loaderNotifications = async () => {
-  const response = await fetch(
-    "https://net-zoon.onrender.com/notifications/get-notification"
-  );
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
+  const response = await fetch(baseUrl + "/notifications/get-notification");
   const data = await response.json();
   return data;
 };

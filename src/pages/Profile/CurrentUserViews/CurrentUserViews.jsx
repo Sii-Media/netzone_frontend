@@ -16,7 +16,8 @@ const CurrentUserViews = () => {
       <ul>
         {data.map((ele) => (
           <li>
-            <Link
+            <div
+              // to={`/catagories/${ele.userType}/${ele._id}`}
               className={`flex items-center py-2  border-b border-b-gray-300`}
             >
               <img
@@ -25,7 +26,7 @@ const CurrentUserViews = () => {
                 className={`w-14 rounded-full mr-6`}
               />
               <h4 className={`text-lg font-medium`}>{ele.username}</h4>
-            </Link>
+            </div>
           </li>
         ))}
       </ul>
@@ -35,13 +36,15 @@ const CurrentUserViews = () => {
 
 export default CurrentUserViews;
 export const currentUserViewsLoader = async () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   if (window.localStorage.getItem("user")) {
     console.log(true);
     const userCurrentPrOfileId = JSON.parse(window.localStorage.getItem("user"))
       .result._id;
     console.log(userCurrentPrOfileId);
     const response = await fetch(
-      `https://net-zoon.onrender.com/user/${userCurrentPrOfileId}/visitors`
+      baseUrl + `/user/${userCurrentPrOfileId}/visitors`
     );
     const data = await response.json();
     console.log(data);

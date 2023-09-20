@@ -14,7 +14,10 @@ const SignUpInfoPage = () => {
   const [coverPhotoFile, setCoverPhotoFile] = useState(null);
   const [frontIdPhotoFile, setFrontIdPhotoFile] = useState(null);
   const [backIdPhotoFile, setBackIdPhotoFile] = useState(null);
-  console.log(profilePhotoFile);
+  const [isDeliverable, setIsDeliverable] = useState(false);
+  const [isFreeZone, setIsFreeZone] = useState(false);
+  const [isServiceChecked, setIsServiceChecked] = useState(false);
+
   const handleTradeLicenseChange = (event) => {
     setTradeLicenseFile(event.target.files[0]);
   };
@@ -49,11 +52,8 @@ const SignUpInfoPage = () => {
   const website = useRef();
   const link = useRef();
   const slogn = useRef();
-  const deliverable = useRef();
   const subcategory = useRef();
   const address = useRef();
-  const isFreeZoon = useRef();
-  const isService = useRef();
   const companyProductsNumber = useRef();
   const sellType = useRef();
   const toCountry = useRef();
@@ -62,14 +62,12 @@ const SignUpInfoPage = () => {
   const coverPhoto = useRef();
   const frontIdPhoto = useRef();
   const backIdPhoto = useRef();
-  console.log(backIdPhoto);
-  useEffect(() => {
-    console.log(userNameRef.current.value);
-  });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const baseUrl = process.env.REACT_APP_BASE_URL;
     const formData = new FormData();
+    console.log("not user");
     formData.append("userType", params.userType);
     formData.append("country", cou.current.value);
     formData.append("email", emailRef.current.value);
@@ -83,11 +81,15 @@ const SignUpInfoPage = () => {
     formData.append("website", website.current.value);
     formData.append("link", link.current.value);
     formData.append("slogn", slogn.current.value);
-    formData.append("deliverable", deliverable.current.checked ? true : false);
+    // formData.append("deliverable", deliverable.current.checked ? true : false);
     formData.append("subcategory", subcategory.current.value);
     formData.append("address", address.current.value);
-    formData.append("isFreeZoon", isFreeZoon.current.checked ? true : false);
-    formData.append("isService", isService.current.checked ? true : false);
+    // formData.append("isFreeZoon", isFreeZoon.current.checked ? true : false);
+    // formData.append("isService", isService.current.checked ? true : false);
+    formData.append("deliverable", isDeliverable);
+    formData.append("isFreeZoon", isFreeZone);
+    formData.append("isService", isServiceChecked);
+
     formData.append(
       "companyProductsNumber",
       companyProductsNumber.current.value
@@ -99,19 +101,13 @@ const SignUpInfoPage = () => {
     formData.append("coverPhoto", coverPhotoFile);
     formData.append("frontIdPhoto", frontIdPhotoFile);
     formData.append("backIdPhoto", backIdPhotoFile);
-    console.log(formData.getAll("bio"));
-    console.log(formData.getAll("description"));
-    console.log(bio.current.value);
-    console.log(description.current.value);
     setSubmitStatus("Wait Submitting...");
+    formData.forEach((ele) => console.log(ele));
     try {
-      const response = await fetch(
-        "https://net-zoon.onrender.com/user/register",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch(baseUrl + "/user/register", {
+        method: "POST",
+        body: formData,
+      });
       if (response.ok) {
         // Handle success
         console.log("Data sent successfully");
@@ -145,6 +141,7 @@ const SignUpInfoPage = () => {
   const handleRePasswordChange = () => {
     setPasswordMatch(password.current.value === rePassword.current.value);
   };
+
   return (
     <MainSection className={`!mt-52 md:!mt-36`}>
       <h2 className={`text-3xl font-medium text-[#5776a5] text-center mb-8`}>
@@ -153,9 +150,9 @@ const SignUpInfoPage = () => {
       {(params.userType === "local_company" ||
         params.userType === "real_estate" ||
         params.userType === "trader" ||
+        params.userType === "user" ||
         params.userType === "car" ||
         params.userType === "sea_companies" ||
-        params.userType === "user" ||
         params.userType === "freezone" ||
         params.userType === "factory" ||
         params.userType === "news_agency" ||
@@ -354,44 +351,37 @@ const SignUpInfoPage = () => {
                   className={` ml-2 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
                 />
               </div>
-              {params.userType === "local_company" && (
-                <div
-                  className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
-                >
-                  <label
-                    htmlFor="deliverable"
-                    className={`text-xl mb-2 md:mb-0`}
-                  >
-                    {t("isThereDelivery")}
-                  </label>
-                  <input
-                    type="checkbox"
-                    id="deliverable"
-                    name="deliverable"
-                    ref={deliverable}
-                    className={` ml-2 w-10 h-10 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
-                  />
-                </div>
-              )}
-              {params.userType !== "user" && (
-                <div
-                  className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
-                >
-                  <label
-                    htmlFor="subcategory"
-                    className={`text-xl mb-2 md:mb-0`}
-                  >
-                    {t("enterTheSubcategory")}
-                  </label>
-                  <input
-                    id="subcategory"
-                    type="text"
-                    name="subcategory"
-                    ref={subcategory}
-                    className={` ml-2 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
-                  />
-                </div>
-              )}
+
+              <div
+                className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
+              >
+                <label htmlFor="deliverable" className={`text-xl mb-2 md:mb-0`}>
+                  {t("isThereDelivery")}
+                </label>
+                <input
+                  type="checkbox"
+                  id="deliverable"
+                  name="deliverable"
+                  checked={isDeliverable}
+                  className={` ml-2 w-10 h-10 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
+                  onChange={(e) => setIsDeliverable(e.target.checked)}
+                />
+              </div>
+
+              <div
+                className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
+              >
+                <label htmlFor="subcategory" className={`text-xl mb-2 md:mb-0`}>
+                  {t("enterTheSubcategory")}
+                </label>
+                <input
+                  id="subcategory"
+                  type="text"
+                  name="subcategory"
+                  ref={subcategory}
+                  className={` ml-2 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
+                />
+              </div>
 
               <div
                 className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
@@ -422,117 +412,107 @@ const SignUpInfoPage = () => {
                   className={` ml-2 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
                 />
               </div>
-              {params.userType !== "user" && (
-                <div
-                  className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
-                >
-                  <label
-                    htmlFor="isFreeZoon"
-                    className={`text-xl mb-2 md:mb-0`}
-                  >
-                    {t("affiliatedToFreeZone")}
-                  </label>
-                  <input
-                    type="checkbox"
-                    id="isFreeZoon"
-                    name="isFreeZoon"
-                    ref={isFreeZoon}
-                    className={` ml-2 w-10 h-10 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
-                  />
-                </div>
-              )}
 
-              {(params.userType === "local_company" ||
-                params.userType === "factory") && (
-                <div
-                  className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
-                >
-                  <label htmlFor="isService" className={`text-xl mb-2 md:mb-0`}>
-                    {t("doYouOfferServicesRatherThanProducts")}
-                  </label>
-                  <input
-                    type="checkbox"
-                    id="isService"
-                    name="isService"
-                    ref={isService}
-                    className={` ml-2 w-10 h-10 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
-                  />
-                </div>
-              )}
-              {params.userType !== "user" && (
-                <div
-                  className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
-                >
-                  <label
-                    htmlFor="companyProductsNumber"
-                    className={`text-xl mb-2 md:mb-0`}
-                  >
-                    {t("numberOfCompanyProducts")}
-                  </label>
-                  <input
-                    id="companyProductsNumber"
-                    type="number"
-                    name="companyProductsNumber"
-                    required
-                    ref={companyProductsNumber}
-                    className={` ml-2 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
-                  />
-                </div>
-              )}
-              {params.userType !== "user" && (
-                <div
-                  className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
-                >
-                  <label htmlFor="sellType" className={`text-xl mb-2 md:mb-0`}>
-                    {t("methodOfSaleRetailOrWholesale")}
-                  </label>
-                  <input
-                    id="sellType"
-                    type="text"
-                    name="sellType"
-                    ref={sellType}
-                    className={` ml-2 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
-                  />
-                </div>
-              )}
-              {params.userType !== "user" && (
-                <div
-                  className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
-                >
-                  <label htmlFor="toCountry" className={`text-xl mb-2 md:mb-0`}>
-                    {t("whereToSellToWhichCountry")}
-                  </label>
-                  <input
-                    id="toCountry"
-                    type="text"
-                    name="toCountry"
-                    ref={toCountry}
-                    className={` ml-2 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
-                  />
-                </div>
-              )}
-              {params.userType !== "user" && (
-                <div
-                  className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
-                >
-                  <label
-                    htmlFor="tradeLicensePhoto"
-                    className={`text-xl mb-2 md:mb-0`}
-                  >
-                    {t("copyOfTradeLicense")}
-                  </label>
-                  <input
-                    required
-                    id="tradeLicensePhoto"
-                    type="file"
-                    name="tradeLicensePhoto"
-                    ref={tradeLicensePhoto}
-                    multiple
-                    onChange={handleTradeLicenseChange}
-                  />
-                </div>
-              )}
+              <div
+                className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
+              >
+                <label htmlFor="isFreeZoon" className={`text-xl mb-2 md:mb-0`}>
+                  {t("affiliatedToFreeZone")}
+                </label>
+                <input
+                  type="checkbox"
+                  id="isFreeZoon"
+                  name="isFreeZoon"
+                  checked={isFreeZone}
+                  className={` ml-2 w-10 h-10 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
+                  onChange={(e) => setIsFreeZone(e.target.checked)}
+                />
+              </div>
 
+              <div
+                className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
+              >
+                <label htmlFor="isService" className={`text-xl mb-2 md:mb-0`}>
+                  {t("doYouOfferServicesRatherThanProducts")}
+                </label>
+                <input
+                  type="checkbox"
+                  id="isService"
+                  name="isService"
+                  checked={isServiceChecked}
+                  onChange={(e) => setIsServiceChecked(e.target.checked)}
+                  className={` ml-2 w-10 h-10 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
+                />
+              </div>
+
+              <div
+                className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
+              >
+                <label
+                  htmlFor="companyProductsNumber"
+                  className={`text-xl mb-2 md:mb-0`}
+                >
+                  {t("numberOfCompanyProducts")}
+                </label>
+                <input
+                  id="companyProductsNumber"
+                  type="number"
+                  name="companyProductsNumber"
+                  required
+                  ref={companyProductsNumber}
+                  className={` ml-2 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
+                />
+              </div>
+
+              <div
+                className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
+              >
+                <label htmlFor="sellType" className={`text-xl mb-2 md:mb-0`}>
+                  {t("methodOfSaleRetailOrWholesale")}
+                </label>
+                <input
+                  id="sellType"
+                  type="text"
+                  name="sellType"
+                  ref={sellType}
+                  className={` ml-2 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
+                />
+              </div>
+
+              <div
+                className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
+              >
+                <label htmlFor="toCountry" className={`text-xl mb-2 md:mb-0`}>
+                  {t("whereToSellToWhichCountry")}
+                </label>
+                <input
+                  id="toCountry"
+                  type="text"
+                  name="toCountry"
+                  ref={toCountry}
+                  className={` ml-2 outline-none px-4 flex justify-center items-center border-2 border-[#5776a5] rounded-2xl duration-300`}
+                />
+              </div>
+
+              <div
+                className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
+              >
+                <label
+                  htmlFor="tradeLicensePhoto"
+                  className={`text-xl mb-2 md:mb-0`}
+                >
+                  {t("copyOfTradeLicense")}
+                </label>
+                <input
+                  required
+                  id="tradeLicensePhoto"
+                  type="file"
+                  name="tradeLicensePhoto"
+                  ref={tradeLicensePhoto}
+                  multiple
+                  onChange={handleTradeLicenseChange}
+                />
+              </div>
               <div
                 className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
               >
@@ -568,49 +548,43 @@ const SignUpInfoPage = () => {
                   onChange={handleCoverPhotoChange}
                 />
               </div>
-              {params.userType !== "user" && (
-                <div
-                  className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
+
+              <div
+                className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
+              >
+                <label
+                  htmlFor="frontIdPhoto"
+                  className={`text-xl mb-2 md:mb-0`}
                 >
-                  <label
-                    htmlFor="frontIdPhoto"
-                    className={`text-xl mb-2 md:mb-0`}
-                  >
-                    {t("frontIdPhoto")}
-                  </label>
-                  <input
-                    required
-                    id="frontIdPhoto"
-                    type="file"
-                    name="frontIdPhoto"
-                    ref={frontIdPhoto}
-                    multiple
-                    onChange={handleFrontIdPhotoChange}
-                  />
-                </div>
-              )}
-              {(params.userType !== "user" ||
-                params.userType !== "news_agency") && (
-                <div
-                  className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
-                >
-                  <label
-                    htmlFor="backIdPhoto"
-                    className={`text-xl mb-2 md:mb-0`}
-                  >
-                    {t("backIdPhoto")}
-                  </label>
-                  <input
-                    required
-                    id="backIdPhoto"
-                    type="file"
-                    name="backIdPhoto"
-                    ref={backIdPhoto}
-                    multiple
-                    onChange={handleBackIdPhotoChange}
-                  />
-                </div>
-              )}
+                  {t("frontIdPhoto")}
+                </label>
+                <input
+                  required
+                  id="frontIdPhoto"
+                  type="file"
+                  name="frontIdPhoto"
+                  ref={frontIdPhoto}
+                  multiple
+                  onChange={handleFrontIdPhotoChange}
+                />
+              </div>
+
+              <div
+                className={`flex items-center justify-between flex-col md:flex-row mb-4 pb-2 border-b-[1px] border-[#5776a5]`}
+              >
+                <label htmlFor="backIdPhoto" className={`text-xl mb-2 md:mb-0`}>
+                  {t("backIdPhoto")}
+                </label>
+                <input
+                  required
+                  id="backIdPhoto"
+                  type="file"
+                  name="backIdPhoto"
+                  ref={backIdPhoto}
+                  multiple
+                  onChange={handleBackIdPhotoChange}
+                />
+              </div>
             </div>
             <div className={`flex flex-col items-center`}>
               <img

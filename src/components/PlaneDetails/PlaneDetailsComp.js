@@ -3,14 +3,21 @@ import RatingSystem from "../UI/RatingSystem";
 import ShareLink from "../UI/ShareLink";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import MainSection from "../UI/MainSection";
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getCurrencySymbol } from "../../funcs/Currency";
+import { useTranslation } from "react-i18next";
 const PlaneDetailsComp = () => {
   const { results } = useLoaderData();
-  console.log(results);
+
   const [heart, setHeart] = useState(false);
   const handleHeartState = () => {
     setHeart(!heart);
   };
+  const currencySymbol = useSelector((state) =>
+    getCurrencySymbol(state.currency.selectedCurrency)
+  );
+  const { t } = useTranslation();
   return (
     <MainSection className={`!mt-52 md:!mt-24 w-[90%] md:w-[70%] mx-auto`}>
       <div className={`flex flex-col`}>
@@ -31,7 +38,7 @@ const PlaneDetailsComp = () => {
             </div>
             <div>
               <h2 className={`text-2xl mb-4 text-[#5776a5]`}>
-                {results.price}
+                {results.price.toLocaleString()} {t(currencySymbol)}
               </h2>
             </div>
             <div>
@@ -62,11 +69,12 @@ const PlaneDetailsComp = () => {
                 >
                   Call
                 </button>
-                <button
+                <Link
+                  to="/chats"
                   className={`p-1 bg-[#5776a5] text-white w-28 rounded-2xl mr-2 hover:text-[#5776a5] hover:bg-transparent duration-300 border border-[#5776a5]`}
                 >
                   Chat
-                </button>
+                </Link>
                 <button
                   className={`p-1 bg-[#5776a5] text-white w-36 rounded-2xl hover:text-[#5776a5] hover:bg-transparent duration-300 border border-[#5776a5]`}
                 >
@@ -153,7 +161,6 @@ const PlaneDetailsComp = () => {
                 {results.location}
               </span>
             </li>
-            
             <li
               className={`p-2 text-lg font-medium flex items-center justify-between`}
             >

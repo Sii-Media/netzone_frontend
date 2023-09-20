@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 
@@ -12,12 +12,35 @@ const MultiItemCarousel = ({
   count4,
   count5,
   count6,
+  autoPlayInterval,
+  isAutoPlay,
+  isCarouselAutoPlayMobile, // New prop for controlling mobile autoplay
 }) => {
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    // Check the screen width and update the isMobile state accordingly
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Adjust the threshold as needed
+    };
+
+    // Add a resize event listener
+    window.addEventListener("resize", handleResize);
+
+    // Initial check on component mount
+    handleResize();
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <AliceCarousel
       items={items}
-      autoPlay
-      autoPlayInterval={1000}
+      autoPlay={true && (!isMobile || isCarouselAutoPlayMobile)} // Enable autoplay if isAutoPlay is true and it's not a mobile screen or isCarouselAutoPlayMobile is true
+      autoPlayInterval={autoPlayInterval ? autoPlayInterval : 1000}
       infinite
       autoPlayDirection={autoPlayDirection}
       responsive={{

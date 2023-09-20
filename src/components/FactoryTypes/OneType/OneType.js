@@ -5,9 +5,9 @@ import Card from "../../UI/Card";
 
 const OneType = () => {
   const data = useLoaderData();
-  console.log(data);
+
   return (
-    <MainSection className={`!mt-24 mb-4`}>
+    <MainSection className={`!mt-52 md:!mt-24 md mb-4`}>
       <ul>
         {data.factory.map((ele) => (
           <Card

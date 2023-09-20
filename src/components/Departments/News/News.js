@@ -13,20 +13,24 @@ const News = () => {
   const items = data[14].results.map((ele) => (
     <CardNews
       w="md:w-full md:h-[140rem]"
+      // classNameFirst={`text-xs`}
       key={ele._id}
       imgSrc={ele.imgUrl}
       imgAlt={ele.imgUrl}
       first={ele.title}
       fourth={ele.description}
+      forthClassName={`!h-9 overflow-hidden`}
       path={`/news`}
     />
   ));
 
   return (
-    <MainSection className="mt-10 mb-40 md:mb-32">
+    <MainSection className="mt-5 ">
       <SectionsHeader title={"News"} path="/news" />
       {isCarousel ? (
         <MultiItemCarousel
+          isCarouselAutoPlayMobile={true}
+          autoPlayInterval={3000}
           count0={1}
           count1={1}
           count2={1}

@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { BsFillShareFill } from "react-icons/bs";
-const ShareLink = () => {
+const ShareLink = ({
+  children,
+  containerClassName,
+  iconClassName,
+  spanClassName,
+}) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -19,16 +24,17 @@ const ShareLink = () => {
 
   return (
     <div
-      className={`px-2 mt-0 text-[#5776a5] text-xl font-medium hover:text-[#5776a5] duration-300 self-center mr-2`}
+      className={`px-2 mt-0 text-[#5776a5] text-xl font-medium hover:text-[#5776a5] duration-300 self-center mr-2 ${containerClassName}`}
     >
       {/* <button className={`flex items-center`} onClick={handleCopy}>
         {copied ? "Link Copied!" : "Share"}{" "}
         <BsFillShareFill className={`ml-2`} />
       </button> */}
       <BsFillShareFill
-        className={`cursor-pointer hover:text-[#3a4f6e] `}
+        className={`cursor-pointer hover:text-[#3a4f6e] ${iconClassName}`}
         onClick={handleCopy}
       />
+      <span className={`${spanClassName}`}>{children}</span>
     </div>
   );
 };

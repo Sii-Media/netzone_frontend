@@ -21,7 +21,6 @@ const EmInfoCom = () => {
   const dataToUse = govermentalCompanies.filter(
     (ele) => ele._id === param.emInfoId
   );
-  console.log(dataToUse);
   // const dataToDisplay = [];
   // for (const property in dataToUse[0]) {
   //   const value = dataToUse[0][property];

@@ -6,36 +6,37 @@ const LogIn = () => {
   const { t } = useTranslation();
   const email = useRef();
   const password = useRef();
+  const [submit, setSubmit] = useState(false);
   const [serverMessage, setServerMessage] = useState("");
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
-    console.log(true)
+    const baseUrl = process.env.REACT_APP_BASE_URL;
+
+
     event.preventDefault();
     const formData = new FormData();
     formData.append("email", email.current.value.toString());
     formData.append("password", password.current.value.toString());
+    setSubmit(true);
     try {
-      const response = await fetch(
-        "https://net-zoon.onrender.com/user/signin",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch(baseUrl + "/user/signin", {
+        method: "POST",
+        body: formData,
+      });
 
       if (response.ok) {
         // Handle success
         console.log("Data sent successfully");
         const data = await response.json();
-        console.log(data);
         window.localStorage.setItem("user", JSON.stringify(data));
         navigate("/profile");
       } else {
         const data = await response.json();
         setServerMessage(data);
-        console.log(data);
+        window.alert("Error Sending Data, please check your credentials");
         console.error("Error sending data");
       }
+      setSubmit(false);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -77,7 +78,7 @@ const LogIn = () => {
           <button
             className={`w-24 flex justify-center items-center border-2 bg-[#5776a5] border-[#5776a5] rounded-xl text-white hover:bg-transparent hover:text-[#5776a5] duration-300`}
           >
-            {t("submit")}
+            {submit ? t("Submitting...") : t("submit")}
           </button>
         </div>
       </form>

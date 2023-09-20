@@ -1,13 +1,18 @@
 import React from "react";
 import { useLoaderData } from "react-router-dom";
 import MainSection from "../../../components/UI/MainSection";
+import { useTranslation } from "react-i18next";
 
 const Followings = () => {
   const data = useLoaderData();
   console.log(data);
+  const { t } = useTranslation();
+
   return (
     <MainSection className={`!mt-44 md:!mt-24 min-h-screen`}>
-      <h2 className={`text-center text-2xl font-bold mb-4`}>Following :</h2>
+      <h2 className={`text-center text-2xl font-bold mb-4`}>
+        {t("following")}:
+      </h2>
       {data.length > 0 && (
         <ul className={`flex flex-col `}>
           {data.map((ele) => (
@@ -37,10 +42,10 @@ const Followings = () => {
 export default Followings;
 export const followingsLoader = async ({ params }) => {
   const userId = params.userId;
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   console.log(userId);
-  const response = await fetch(
-    `https://net-zoon.onrender.com/user/getUserFollowings/${userId}`
-  );
+  const response = await fetch(baseUrl + `/user/getUserFollowings/${userId}`);
   const data = await response.json();
   return data;
 };

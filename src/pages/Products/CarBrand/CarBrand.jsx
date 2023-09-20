@@ -4,8 +4,10 @@ import { useLoaderData, useParams } from "react-router-dom";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const CarBrand = () => {
+  const currency = useSelector((state) => state.currency.selectedCurrency);
   const params = useParams();
   const [productPhoto, setProductPhoto] = useState(null);
   const [productPhotos, setProductPhotos] = useState(null);
@@ -49,6 +51,8 @@ const CarBrand = () => {
   const guarantee = useRef();
   console.log(data);
   const handleSubmit = async (event) => {
+    const baseUrl = process.env.REACT_APP_BASE_URL;
+
     console.log("hello");
     console.log(params);
     event.preventDefault();
@@ -59,7 +63,7 @@ const CarBrand = () => {
       JSON.parse(window.localStorage.getItem("user")).result._id
     );
     formData.append("category", "cars");
-    formData.append("country", "AE");
+    formData.append("country", currency.toString());
     formData.append("name", `${params.carBrand} ${model.current.value}`);
     formData.append("description", description.current.value);
     formData.append("price", +price.current.value);
@@ -91,7 +95,7 @@ const CarBrand = () => {
     // console.log(console.log(f));
     try {
       const response = await fetch(
-        "https://net-zoon.onrender.com/categories/vehicle/create-vehicle",
+        baseUrl + "/categories/vehicle/create-vehicle",
         {
           method: "POST",
           body: formData,

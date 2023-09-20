@@ -7,13 +7,15 @@ const ProServFac = () => {
   console.log(data);
   console.log(data);
   return (
-    <MainSection className={`w-full md:w-[600px] mx-auto`}>
-      <ul className={`flex flex-wrap justify-between [&>*]:mb-4`}>
+    <MainSection className={`w-full md:w-[80%] flex  mx-auto`}>
+      <ul
+        className={`grid grid-cols-2 place-items-center md:grid-cols-3 [&>*]:mb-4 [&>*]:mr-4 mx-auto`}
+      >
         {data.length > 0 ? (
           data.map((ele) => (
             <Card
               path={ele._id}
-              className={`!w-40 !h-40`}
+              className={`!w-36 !h-36 md:!w-[15rem] md:!h-[15rem] 2xl:!w-52 2xl:!h-52`}
               imgSrc={ele.imageUrl}
               imgAlt={ele.title || ele.name}
               title={ele.title || ele.name}
@@ -34,8 +36,9 @@ export const ProServFacLoader = async ({ params }) => {
   const facId = params.facId;
   console.log(facId);
   console.log(facId);
+  const baseUrl = process.env.REACT_APP_BASE_URL;
   const response = await fetch(
-    `https://net-zoon.onrender.com/categories/local-company/get-services/${facId}`
+    baseUrl + `/categories/local-company/get-services/${facId}`
   );
   const data = await response.json();
   return data;

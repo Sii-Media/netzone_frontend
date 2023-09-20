@@ -41,11 +41,13 @@ const Opinions = () => {
 
 export default Opinions;
 export const opinionsAction = async ({ request }) => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const data = await request.formData();
   const text = await data.get("opinion");
   const formData = new FormData();
   formData.append("text", text);
-  const response = await fetch(`https://net-zoon.onrender.com/openions`, {
+  const response = await fetch(baseUrl + `/openions`, {
     method: request.method,
     body: formData,
   });

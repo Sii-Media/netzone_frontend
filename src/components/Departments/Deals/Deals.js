@@ -5,13 +5,20 @@ import MultiItemCarousel from "../../UI/MultiItemCarousel";
 import AdCard from "../../UI/AdCard";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { getCurrencySymbol } from "../../../funcs/Currency";
 
 const Deals = () => {
   const data = useLoaderData();
   const isCarousel = data[12].results.length >= 2 ? true : false;
   const { t } = useTranslation();
+  const currencySymbol = useSelector((state) =>
+    getCurrencySymbol(state.currency.selectedCurrency)
+  );
+  const currency = useSelector((state) => state.currency.selectedCurrency);
+
   const items = data[12].results.map((ele) => (
     <AdCard
+      className={`2xl:!w-[22rem]`}
       key={ele._id}
       imgSrc={ele.imgUrl}
       imgAlt={ele.name}
@@ -19,25 +26,30 @@ const Deals = () => {
       second={ele.companyName}
       third={
         <>
-          Current Price:{" "}
-          <span className=" text-green-900 font-bold">{ele.currentPrice}</span>
+          {t("curr_price")}:{" "}
+          <span className=" text-green-900 font-bold">
+            {ele.currentPrice.toLocaleString()} {t(currencySymbol)}
+          </span>
         </>
       }
       fourth={
         <>
-          Previous Price: <del className=" text-red-500">{ele.prevPrice}</del>
+          {t("prev_price")} :{" "}
+          <del className=" text-red-500">
+            {ele.prevPrice} {t(currencySymbol)}
+          </del>
         </>
       }
-      path={`deals/AE/dealsTypes`}
+      path={`deals/${currency}/dealsTypes`}
     />
   ));
-  const currency = useSelector((state) => state.currency.selectedCurrency);
 
   return (
     <MainSection className="py-2">
       <SectionsHeader title={"Deals"} path={`/deals/${currency}/dealsTypes`} />
       {isCarousel ? (
         <MultiItemCarousel
+          isCarouselAutoPlayMobile={true}
           count0={1}
           count1={2}
           count2={2}
@@ -46,6 +58,7 @@ const Deals = () => {
           count5={3}
           count6={4}
           items={items}
+          autoPlayInterval={2000}
           autoPlayDirection={"rtl"}
         />
       ) : (

@@ -67,11 +67,15 @@ const Complaints = () => {
 
 export default Complaints;
 export const complaintsLoader = async () => {
-  const response = await fetch(`https://net-zoon.onrender.com/complaints`);
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
+  const response = await fetch(baseUrl + `/complaints`);
   const data = await response.json();
   return data;
 };
 export const complaintsAction = async ({ request }) => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const data = await request.formData();
   const text = await data.get("opinion");
   const address = await data.get("address");
@@ -79,7 +83,7 @@ export const complaintsAction = async ({ request }) => {
   formData.append("text", text);
   formData.append("address", address);
 
-  const response = await fetch(`https://net-zoon.onrender.com/complaints`, {
+  const response = await fetch(baseUrl + `/complaints`, {
     method: request.method,
     body: formData,
   });

@@ -3,18 +3,28 @@ import RatingSystem from "../UI/RatingSystem";
 import ShareLink from "../UI/ShareLink";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import MainSection from "../UI/MainSection";
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getCurrencySymbol } from "../../funcs/Currency";
+import { useTranslation } from "react-i18next";
 const CarDetailsComp = () => {
+  const [isCall, setIsCall] = useState("Call");
   const { results } = useLoaderData();
-  console.log(results);
   const [heart, setHeart] = useState(false);
   const handleHeartState = () => {
     setHeart(!heart);
   };
+  const currencySymbol = useSelector((state) =>
+    getCurrencySymbol(state.currency.selectedCurrency)
+  );
+  const callHandler = () => {
+    setIsCall(results.contactNumber);
+  };
+  const { t } = useTranslation();
   return (
     <MainSection className={`!mt-52 md:!mt-24 w-[90%] md:w-[70%] mx-auto`}>
       <div className={`flex flex-col`}>
-        <div className={`flex items-center`}>
+        <div className={`flex flex-col md:flex-row items-center`}>
           <div className={`mr-4 p-1 bg-[#5776a5] bg-opacity-20 rounded-lg`}>
             <img
               src={results.imageUrl}
@@ -26,12 +36,13 @@ const CarDetailsComp = () => {
             <div className={`flex flex-col`}>
               <p className={`text-3xl font-bold mb-4`}>{results.name}</p>
               <p className={`text-xl font-medium mb-4`}>
-                {results.description}
+                {t(results.description)}
               </p>
             </div>
             <div>
               <h2 className={`text-2xl mb-4 text-[#5776a5]`}>
-                {results.price}
+                {results.price && results.price.toLocaleString()}{" "}
+                {t(currencySymbol)}
               </h2>
             </div>
             <div>
@@ -56,21 +67,25 @@ const CarDetailsComp = () => {
                   />
                 )} */}
               </div>
-              <div className={`mt-4 flex items-center justify-center`}>
+              <div
+                className={`mt-4 flex items-center justify-center flex-wrap`}
+              >
                 <button
+                  onClick={callHandler}
                   className={`p-1 bg-[#5776a5] text-white w-28 rounded-2xl mr-2 hover:text-[#5776a5] hover:bg-transparent duration-300 border border-[#5776a5]`}
                 >
-                  Call
+                  {isCall}
                 </button>
-                <button
+                <Link
+                  to="/chats"
                   className={`p-1 bg-[#5776a5] text-white w-28 rounded-2xl mr-2 hover:text-[#5776a5] hover:bg-transparent duration-300 border border-[#5776a5]`}
                 >
-                  Chat
-                </button>
+                {t("chat")}
+                </Link>
                 <button
-                  className={`p-1 bg-[#5776a5] text-white w-36 rounded-2xl hover:text-[#5776a5] hover:bg-transparent duration-300 border border-[#5776a5]`}
+                  className={`p-1 bg-[#5776a5] text-white w-36 rounded-2xl hover:text-[#5776a5] hover:bg-transparent duration-300 border border-[#5776a5] mt-2 `}
                 >
-                  Price Suggestion
+                  <Link to="priceSugg">Price Suggestion</Link>
                 </button>
               </div>
             </div>

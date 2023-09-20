@@ -32,8 +32,9 @@ const colourStyles = {
     };
   },
 };
-const Search = () => {
+const Search = ({ className, placeholder }) => {
   const currency = useSelector((state) => state.currency.selectedCurrency);
+  const { t } = useTranslation();
   const options = [
     {
       value: "All_Departments",
@@ -42,7 +43,7 @@ const Search = () => {
     },
     {
       value: "local_company",
-      label: "Local Companies",
+      label: "local_companies",
       path: "/search/local_company",
     },
     {
@@ -58,7 +59,7 @@ const Search = () => {
     { value: "car", label: "Cars", path: "/search/car" },
     {
       value: "civilAirCraft",
-      label: "Civil AirCraft",
+      label: "civil_aircraft",
       path: `/search/civilAirCraft/${currency}`,
     },
     { value: "real_estate", label: "Real Estate", path: "/search/real_estate" },
@@ -78,15 +79,16 @@ const Search = () => {
       }
       to={path}
     >
-      {label}
+      {t(label)}
     </NavLink>
   );
-  const { t } = useTranslation();
   return (
-    <div className="w-72 md:w-[35rem] mb-2 md:mb-0 mx-0 md:mx-2  cursor-pointer custom-select">
+    <div
+      className={`w-72 md:w-[35rem] 2xl:w-[60%] mb-2 md:mb-0 mx-0 md:mx-2  cursor-pointer custom-select ${className}`}
+    >
       <Select
         styles={colourStyles}
-        placeholder={t(`Search in Netzoon`)}
+        placeholder={placeholder ? placeholder : t(`Search in Netzoon`)}
         options={options}
         components={{ DropdownIndicator }}
         formatOptionLabel={formatOptionLabel}

@@ -17,6 +17,7 @@ const CurrentUserFollowings = () => {
         {data.map((ele) => (
           <li>
             <Link
+              to={`/catagories/${ele.userType}/${ele._id}`}
               className={`flex items-center py-2 border-b border-b-gray-300`}
             >
               <img
@@ -35,13 +36,15 @@ const CurrentUserFollowings = () => {
 
 export default CurrentUserFollowings;
 export const currentUserFollowingsLoader = async () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   if (window.localStorage.getItem("user")) {
     console.log(true);
     const userCurrentPrOfileId = JSON.parse(window.localStorage.getItem("user"))
       .result._id;
     console.log(userCurrentPrOfileId);
     const response = await fetch(
-      `https://net-zoon.onrender.com/user/getUserFollowings/${userCurrentPrOfileId}`
+      baseUrl + `/user/getUserFollowings/${userCurrentPrOfileId}`
     );
     const data = await response.json();
     console.log(data);

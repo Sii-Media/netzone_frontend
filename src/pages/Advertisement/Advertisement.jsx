@@ -26,15 +26,17 @@ const Advertisement = () => {
     <MainSection
       className={`!mt-52 md:!mt-28 relative min-h-screen overflow-hidden`}
     >
-      <h2 className={`text-2xl font-semibold text-center mb-2`}>Advertisement</h2>
-      <div className={`flex justify-center items-center mt-2 mb-2`}>
+      <h2 className={`text-2xl font-semibold text-center mb-2`}>
+        Advertisement
+      </h2>
+      <div className={`flex justify-center items-center mt-2 mb-4`}>
         <label className={`text-2xl text-[#5776a5] mr-2`}>
           Filter by Type:{" "}
         </label>
         <select
           value={selectedFilter}
           onChange={(e) => setSelectedFilter(e.target.value)}
-          className={`rounded-md border border-[#5776a5] p-1 outline-none`}
+          className={`rounded-md border border-[#5776a5] p-0 outline-none`}
         >
           <option value="Show All">Show All</option>
           <option value="company">Company</option>
@@ -46,51 +48,63 @@ const Advertisement = () => {
         </select>
       </div>
 
-      <div className={`flex flex-col absolute left-4`}>
-        <div className={`flex items-center mt-2 mb-2 w-72 justify-between`}>
-          <label className={`text-lg text-[#5776a5] mr-2`}>Search: </label>{" "}
-          <input
-            className={`rounded-md border border-[#5776a5] p-1 w-32 outline-none`}
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <div className={`flex  items-center mt-2 mb-2 w-72 justify-between`}>
-          <label className={`text-lg text-[#5776a5] mr-2`}>
-            Search by Owner:{" "}
-          </label>{" "}
-          <input
-            className={`rounded-md border border-[#5776a5] p-1 w-32 outline-none`}
-            type="text"
-            placeholder="Filter by owner..."
-            value={ownerSearchTerm}
-            onChange={(e) => setOwnerSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <div className={`flex items-center mt-2 mb-2 w-72 justify-between`}>
-          <label className={`text-lg text-[#5776a5] mr-2`}>
-            Filter by Year:{" "}
-          </label>{" "}
-          <input
-            className={`rounded-md border border-[#5776a5] p-1 w-32 outline-none`}
-            type="text"
-            placeholder="Filter by year..."
-            value={yearFilter}
-            onChange={(e) => setYearFilter(e.target.value)}
-          />
-        </div>
-        <div className={`flex  items-center mt-2 mb-2 w-72 justify-between`}>
-          <label className={`text-lg text-[#5776a5] mr-2`}>
+      <div className={`mb-4`}>
+        <div
+          className={`flex flex-col md:flex-row items-start md:items-center justify-start md:justify-center`}
+        >
+          <div
+            className={`flex md:block justify-between items-center  w-full md:w-auto mb-2 md:mb-0`}
+          >
+            <label className={`text-lg text-[#5776a5] mr-2`}>Search: </label>{" "}
             <input
-              type="checkbox"
-              checked={showPurchasableOnly}
-              onChange={() => setShowPurchasableOnly(!showPurchasableOnly)}
+              className={`rounded-md border border-[#5776a5] p-1 w-32 outline-none md:mr-2`}
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            Purchasable Only
-          </label>
+          </div>
+          <div
+            className={`flex md:block justify-between items-center  w-full md:w-auto mb-2 md:mb-0`}
+          >
+            <label className={`text-lg text-[#5776a5] mr-2`}>
+              Search by Owner:{" "}
+            </label>{" "}
+            <input
+              className={`rounded-md border border-[#5776a5] p-1 w-32 outline-none md:mr-2`}
+              type="text"
+              placeholder="Filter by owner..."
+              value={ownerSearchTerm}
+              onChange={(e) => setOwnerSearchTerm(e.target.value)}
+            />
+          </div>
+          <div
+            className={`flex md:block justify-between items-center  w-full md:w-auto mb-2 md:mb-0`}
+          >
+            <label className={`text-lg text-[#5776a5] mr-2`}>
+              Filter by Year:{" "}
+            </label>{" "}
+            <input
+              className={`rounded-md border border-[#5776a5] p-1 w-32 outline-none md:mr-2`}
+              type="text"
+              placeholder="Filter by year..."
+              value={yearFilter}
+              onChange={(e) => setYearFilter(e.target.value)}
+            />
+          </div>
+          <div
+            className={`flex md:block justify-between items-center  w-full md:w-auto mb-2 md:mb-0`}
+          >
+            <label className={`text-lg text-[#5776a5] mr-2`}>
+              <input
+                className={`w-5 h-5`}
+                type="checkbox"
+                checked={showPurchasableOnly}
+                onChange={() => setShowPurchasableOnly(!showPurchasableOnly)}
+              />
+              Purchasable Only
+            </label>
+          </div>
         </div>
       </div>
 
@@ -130,7 +144,9 @@ const Advertisement = () => {
 
 export default Advertisement;
 export const advertisementLoader = async () => {
-  const response = await fetch(`https://net-zoon.onrender.com/advertisements`);
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
+  const response = await fetch(baseUrl + `/advertisements`);
   const data = await response.json();
   return data;
 };

@@ -6,10 +6,19 @@ import {
   MdOutlineRequestQuote,
   MdOutlineScreenShare,
   MdTrackChanges,
+  MdViewList,
 } from "react-icons/md";
-import { AiFillEdit } from "react-icons/ai";
+import {
+  AiFillEdit,
+  AiFillHeart,
+  AiOutlineAppstoreAdd,
+  AiOutlineUserSwitch,
+} from "react-icons/ai";
 import { Link, NavLink } from "react-router-dom";
 import { MdOutlineDoneAll } from "react-icons/md";
+import { TbShoppingCart } from "react-icons/tb";
+import { BiWallet } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
 const CurrentUserProfile = () => {
   const [user, setUser] = useState(null);
   useEffect(() => {
@@ -18,7 +27,7 @@ const CurrentUserProfile = () => {
       setUser(JSON.parse(window.localStorage.getItem("user")));
     }
   }, []);
-  console.log(user);
+  const { t } = useTranslation();
   return (
     <MainSection
       className={`flex flex-col  items-center w-[99%] lg::w-[900px] mx-auto  !mt-48 md:!mt-20`}
@@ -49,12 +58,22 @@ const CurrentUserProfile = () => {
               </div>
             </div>
             <div className={`mt-20 `}>
-              <h2 className={`text-2xl font-semibold`}>
+              <h2 className={`text-2xl font-semibold flex items-center mt-2`}>
+                <Link to="/profile/switchAccount">
+                  <AiOutlineUserSwitch
+                    className={`text-[#5776a5] w-7 h-7 mr-2 cursor-pointer`}
+                  />
+                </Link>
                 {user.result.username}
+                <Link to="/profile/addAccount">
+                  <AiOutlineAppstoreAdd
+                    className={`text-[#5776a5] w-8 h-8 ml-2 cursor-pointer`}
+                  />
+                </Link>
               </h2>
             </div>
             <div
-              className={`flex items-center justify-between w-[90%] md:w-1/2 mt-4 border-t border-gray-300 pt-4`}
+              className={`flex items-center justify-between flex-wrap w-[90%] md:w-1/2 mt-4 border-t border-gray-300 pt-4`}
             >
               <div
                 className={`flex flex-col justify-center items-center w-[100px]`}
@@ -65,9 +84,35 @@ const CurrentUserProfile = () => {
                   <BsCart4 className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
                 </div>
                 <span className="whitespace-nowrap ">
-                  Sold {user.result.isService ? "Services" : "Products"}
+                  Sold {user.result.isService ? t("services") : t("products")}
                 </span>
               </div>
+              <Link
+                to="myOrders"
+                className={`flex flex-col justify-center items-center w-[100px]`}
+              >
+                <div
+                  className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+                >
+                  <TbShoppingCart
+                    className={`w-4 md:w-7 h-4 md:h-7 text-white`}
+                  />
+                </div>
+                <span>{t("Orders")}</span>
+              </Link>
+              <Link
+                to="myCredit"
+                className={`flex flex-col justify-center items-center w-[100px]`}
+              >
+                <div
+                  className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+                >
+                  <BiWallet className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
+                </div>
+                <span className={`whitespace-nowrap`}>
+                  {t("NetZoon Credits")}
+                </span>
+              </Link>
               <div
                 className={`flex flex-col justify-center items-center w-[100px]`}
               >
@@ -78,21 +123,23 @@ const CurrentUserProfile = () => {
                     className={`w-4 md:w-7 h-4 md:h-7 text-white`}
                   />
                 </div>
-                <span>Popular</span>
+                <span>{t("popular")}</span>
               </div>
               <div
                 className={`flex flex-col justify-center items-center w-[100px]`}
               >
-                <div
-                  className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
-                >
-                  <BsFillChatLeftTextFill
-                    className={`w-4 md:w-7 h-4 md:h-7 text-white`}
-                  />
-                </div>
-                <span>Chat</span>
+                <Link to="/chats" className={`flex flex-col items-center`}>
+                  <div
+                    className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+                  >
+                    <BsFillChatLeftTextFill
+                      className={`w-4 md:w-7 h-4 md:h-7 text-white`}
+                    />
+                  </div>
+                  <span>{t("chat")}</span>
+                </Link>
               </div>
-              <div
+              {/* <div
                 className={`flex flex-col justify-center items-center w-[100px]`}
               >
                 <div
@@ -101,7 +148,7 @@ const CurrentUserProfile = () => {
                   <AiFillEdit className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
                 </div>
                 <span>Edit Profile</span>
-              </div>
+              </div> */}
             </div>
             <div
               className={`flex items-center justify-between w-[90%] md:w-1/3 mt-5`}
@@ -111,21 +158,21 @@ const CurrentUserProfile = () => {
                 className={`flex flex-col items-center justify-center`}
               >
                 <span>{user.result.followings.length}</span>
-                <span>Followings</span>
+                <span>{t("Followings")}</span>
               </Link>
               <Link
                 to="followers"
                 className={`flex flex-col items-center justify-center`}
               >
                 <span>{user.result.followers.length}</span>
-                <span>Followers</span>
+                <span>{t("Follower")}s</span>
               </Link>
               <Link
                 to="views"
                 className={`flex flex-col items-center justify-center`}
               >
                 <span>{user.result.profileViews}</span>
-                <span>Visitors</span>
+                <span>{t("visitors")}</span>
               </Link>
             </div>
             <div
@@ -147,7 +194,7 @@ const CurrentUserProfile = () => {
                   ].join(" ")
                 }
               >
-                About Us
+                {t("about_us")}
               </NavLink>
               <NavLink
                 end
@@ -165,7 +212,7 @@ const CurrentUserProfile = () => {
                   ].join(" ")
                 }
               >
-                {user.result.isService ? "Services" : "Products"}
+                {user.result.isService ? t("services") : t("products")}
               </NavLink>
             </div>
           </>
@@ -195,8 +242,18 @@ const CurrentUserProfile = () => {
               </div>
             </div>
             <div className={`mt-20 `}>
-              <h2 className={`text-2xl font-semibold`}>
+              <h2 className={`text-2xl font-semibold flex items-center mt-2`}>
+                <Link to="/profile/switchAccount">
+                  <AiOutlineUserSwitch
+                    className={`text-[#5776a5] w-7 h-7 mr-2 cursor-pointer`}
+                  />
+                </Link>
                 {user.result.username}
+                <Link to="/profile/addAccount">
+                  <AiOutlineAppstoreAdd
+                    className={`text-[#5776a5] w-8 h-8 ml-2 cursor-pointer`}
+                  />
+                </Link>
               </h2>
             </div>
             <div
@@ -211,23 +268,50 @@ const CurrentUserProfile = () => {
                   <BsCart4 className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
                 </div>
                 <span>
-                  Sold {user.result.userType === "car" && "Cars"}
-                  {user.result.userType === "planes" && "Planes"}
+                  {user.result.userType === "car" && t("sold_cars")}
+                  {user.result.userType === "planes" && t("sold_airplanes")}
                   {user.result.userType === "sea_company" && "Ships"}
                 </span>
               </div>
-
-              <div
+              <Link
+                to="myOrders"
                 className={`flex flex-col justify-center items-center w-[100px]`}
               >
                 <div
                   className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
                 >
-                  <BsFillChatLeftTextFill
+                  <TbShoppingCart
                     className={`w-4 md:w-7 h-4 md:h-7 text-white`}
                   />
                 </div>
-                <span>Chat</span>
+                <span>{t("Orders")}</span>
+              </Link>
+              <Link
+                to="myCredit"
+                className={`flex flex-col justify-center items-center w-[100px]`}
+              >
+                <div
+                  className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+                >
+                  <BiWallet className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
+                </div>
+                <span className={`whitespace-nowrap`}>
+                  {t("NetZoon Credits")}
+                </span>
+              </Link>
+              <div
+                className={`flex flex-col justify-center items-center w-[100px]`}
+              >
+                <Link to="/chats" className={`flex flex-col items-center`}>
+                  <div
+                    className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+                  >
+                    <BsFillChatLeftTextFill
+                      className={`w-4 md:w-7 h-4 md:h-7 text-white`}
+                    />
+                  </div>
+                  <span>{t("chat")}</span>
+                </Link>
               </div>
               <div
                 className={`flex flex-col justify-center items-center w-[100px]`}
@@ -237,7 +321,7 @@ const CurrentUserProfile = () => {
                 >
                   <AiFillEdit className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
                 </div>
-                <span>Edit Profile</span>
+                <span>{t("edit_profile")}</span>
               </div>
             </div>
             <div
@@ -248,21 +332,21 @@ const CurrentUserProfile = () => {
                 className={`flex flex-col items-center justify-center`}
               >
                 <span>{user.result.followings.length}</span>
-                <span>Followings</span>
+                <span>{t("Followings")}</span>
               </Link>
               <Link
                 to="followers"
                 className={`flex flex-col items-center justify-center`}
               >
                 <span>{user.result.followers.length}</span>
-                <span>Followers</span>
+                <span>{t("Followers")}</span>
               </Link>
               <Link
                 to="views"
                 className={`flex flex-col items-center justify-center`}
               >
                 <span>{user.result.profileViews}</span>
-                <span>Visitors</span>
+                <span>{t("visitors")}</span>
               </Link>
             </div>
             <div
@@ -284,7 +368,7 @@ const CurrentUserProfile = () => {
                   ].join(" ")
                 }
               >
-                About Us
+                {t("about_us")}
               </NavLink>
               <NavLink
                 end
@@ -331,7 +415,19 @@ const CurrentUserProfile = () => {
             </div>
           </div>
           <div className={`mt-20 `}>
-            <h2 className={`text-2xl font-semibold`}>{user.result.username}</h2>
+            <h2 className={`text-2xl font-semibold flex items-center mt-2`}>
+              <Link to="/profile/switchAccount">
+                <AiOutlineUserSwitch
+                  className={`text-[#5776a5] w-7 h-7 mr-2 cursor-pointer`}
+                />
+              </Link>
+              {user.result.username}
+              <Link to="/profile/addAccount">
+                <AiOutlineAppstoreAdd
+                  className={`text-[#5776a5] w-8 h-8 ml-2 cursor-pointer`}
+                />
+              </Link>
+            </h2>
           </div>
           <div
             className={`flex items-center justify-between w-[90%] md:w-1/2 mt-4 border-t border-gray-300 pt-4`}
@@ -346,18 +442,45 @@ const CurrentUserProfile = () => {
               </div>
               <span>Sold Properties</span>
             </div>
-
-            <div
+            <Link
+              to="myOrders"
               className={`flex flex-col justify-center items-center w-[100px]`}
             >
               <div
                 className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
               >
-                <BsFillChatLeftTextFill
+                <TbShoppingCart
                   className={`w-4 md:w-7 h-4 md:h-7 text-white`}
                 />
               </div>
-              <span>Chat</span>
+              <span>{t("Orders")}</span>
+            </Link>
+            <Link
+              to="myCredit"
+              className={`flex flex-col justify-center items-center w-[100px]`}
+            >
+              <div
+                className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+              >
+                <BiWallet className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
+              </div>
+              <span className={`whitespace-nowrap`}>
+                {t("NetZoon Credits")}
+              </span>
+            </Link>
+            <div
+              className={`flex flex-col justify-center items-center w-[100px]`}
+            >
+              <Link to="/chats" className={`flex flex-col items-center`}>
+                <div
+                  className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+                >
+                  <BsFillChatLeftTextFill
+                    className={`w-4 md:w-7 h-4 md:h-7 text-white`}
+                  />
+                </div>
+                <span>{t("chat")}</span>
+              </Link>
             </div>
             <div
               className={`flex flex-col justify-center items-center w-[100px]`}
@@ -367,7 +490,7 @@ const CurrentUserProfile = () => {
               >
                 <AiFillEdit className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
               </div>
-              <span>Edit Profile</span>
+              <span>{t("edit_profile")}</span>
             </div>
           </div>
           <div
@@ -378,21 +501,21 @@ const CurrentUserProfile = () => {
               className={`flex flex-col items-center justify-center`}
             >
               <span>{user.result.followings.length}</span>
-              <span>Followings</span>
+              <span>{t("Followings")}</span>
             </Link>
             <Link
               to="followers"
               className={`flex flex-col items-center justify-center`}
             >
               <span>{user.result.followers.length}</span>
-              <span>Followers</span>
+              <span>{t("Followers")}</span>
             </Link>
             <Link
               to="views"
               className={`flex flex-col items-center justify-center`}
             >
               <span>{user.result.profileViews}</span>
-              <span>Visitors</span>
+              <span>{t("visitors")}</span>
             </Link>
           </div>
           <div
@@ -414,7 +537,7 @@ const CurrentUserProfile = () => {
                 ].join(" ")
               }
             >
-              About Us
+              {t("about_us")}
             </NavLink>
             <NavLink
               end
@@ -432,7 +555,7 @@ const CurrentUserProfile = () => {
                 ].join(" ")
               }
             >
-              Real Estate
+              {t("Real Estate")}
             </NavLink>
           </div>
         </>
@@ -459,7 +582,19 @@ const CurrentUserProfile = () => {
             </div>
           </div>
           <div className={`mt-20 `}>
-            <h2 className={`text-2xl font-semibold`}>{user.result.username}</h2>
+            <h2 className={`text-2xl font-semibold flex items-center mt-2`}>
+              <Link to="/profile/switchAccount">
+                <AiOutlineUserSwitch
+                  className={`text-[#5776a5] w-7 h-7 mr-2 cursor-pointer`}
+                />
+              </Link>
+              {user.result.username}
+              <Link to="/profile/addAccount">
+                <AiOutlineAppstoreAdd
+                  className={`text-[#5776a5] w-8 h-8 ml-2 cursor-pointer`}
+                />
+              </Link>
+            </h2>
           </div>
           <div
             className={`flex items-center justify-between w-[90%] md:w-1/3 mt-4 border-t border-gray-300 pt-4`}
@@ -467,15 +602,43 @@ const CurrentUserProfile = () => {
             <div
               className={`flex flex-col justify-center items-center w-[100px]`}
             >
+              <Link
+                to="myOrders"
+                className={`flex flex-col justify-center items-center w-[100px]`}
+              >
+                <div
+                  className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+                >
+                  <TbShoppingCart
+                    className={`w-4 md:w-7 h-4 md:h-7 text-white`}
+                  />
+                </div>
+                <span>{t("Orders")}</span>
+              </Link>
+              <Link to="/chats" className={`flex flex-col items-center`}>
+                <div
+                  className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+                >
+                  <BsFillChatLeftTextFill
+                    className={`w-4 md:w-7 h-4 md:h-7 text-white`}
+                  />
+                </div>
+                <span>{t("chat")}</span>
+              </Link>
+            </div>
+            <Link
+              to="myCredit"
+              className={`flex flex-col justify-center items-center w-[100px]`}
+            >
               <div
                 className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
               >
-                <BsFillChatLeftTextFill
-                  className={`w-4 md:w-7 h-4 md:h-7 text-white`}
-                />
+                <BiWallet className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
               </div>
-              <span>Chat</span>
-            </div>
+              <span className={`whitespace-nowrap`}>
+                {t("NetZoon Credits")}
+              </span>
+            </Link>
             <div
               className={`flex flex-col justify-center items-center w-[100px]`}
             >
@@ -484,7 +647,7 @@ const CurrentUserProfile = () => {
               >
                 <AiFillEdit className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
               </div>
-              <span>Edit Profile</span>
+              <span>{t("edit_profile")}</span>
             </div>
           </div>
           <div
@@ -495,21 +658,21 @@ const CurrentUserProfile = () => {
               className={`flex flex-col items-center justify-center`}
             >
               <span>{user.result.followings.length}</span>
-              <span>Followings</span>
+              <span>{t("Followings")}</span>
             </Link>
             <Link
               to="followers"
               className={`flex flex-col items-center justify-center`}
             >
               <span>{user.result.followers.length}</span>
-              <span>Followers</span>
+              <span>{t("Followers")}</span>
             </Link>
             <Link
               to="views"
               className={`flex flex-col items-center justify-center`}
             >
               <span>{user.result.profileViews}</span>
-              <span>Visitors</span>
+              <span>{t("visitors")}</span>
             </Link>
           </div>
           <div
@@ -531,7 +694,7 @@ const CurrentUserProfile = () => {
                 ].join(" ")
               }
             >
-              About Us
+              {t("about_us")}
             </NavLink>
             <NavLink
               end
@@ -549,7 +712,7 @@ const CurrentUserProfile = () => {
                 ].join(" ")
               }
             >
-              News
+              {t("News")}
             </NavLink>
           </div>
         </>
@@ -576,7 +739,19 @@ const CurrentUserProfile = () => {
             </div>
           </div>
           <div className={`mt-20 `}>
-            <h2 className={`text-2xl font-semibold`}>{user.result.username}</h2>
+            <h2 className={`text-2xl font-semibold flex items-center mt-2`}>
+              <Link to="/profile/switchAccount">
+                <AiOutlineUserSwitch
+                  className={`text-[#5776a5] w-7 h-7 mr-2 cursor-pointer`}
+                />
+              </Link>
+              {user.result.username}
+              <Link to="/profile/addAccount">
+                <AiOutlineAppstoreAdd
+                  className={`text-[#5776a5] w-8 h-8 ml-2 cursor-pointer`}
+                />
+              </Link>
+            </h2>
           </div>
           <div
             className={`flex items-center justify-between flex-wrap w-[90%] md:w-1/3 mt-4 border-t border-gray-300 pt-4`}
@@ -584,15 +759,43 @@ const CurrentUserProfile = () => {
             <div
               className={`flex flex-col justify-center items-center w-[100px]`}
             >
+              <Link
+                to="myOrders"
+                className={`flex flex-col justify-center items-center w-[100px]`}
+              >
+                <div
+                  className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+                >
+                  <TbShoppingCart
+                    className={`w-4 md:w-7 h-4 md:h-7 text-white`}
+                  />
+                </div>
+                <span>{t("Orders")}</span>
+              </Link>
+              <Link to="/chats" className={`flex flex-col items-center`}>
+                <div
+                  className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+                >
+                  <BsFillChatLeftTextFill
+                    className={`w-4 md:w-7 h-4 md:h-7 text-white`}
+                  />
+                </div>
+                <span>{t("chat")}</span>
+              </Link>
+            </div>
+            <Link
+              to="myCredit"
+              className={`flex flex-col justify-center items-center w-[100px]`}
+            >
               <div
                 className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
               >
-                <BsFillChatLeftTextFill
-                  className={`w-4 md:w-7 h-4 md:h-7 text-white`}
-                />
+                <BiWallet className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
               </div>
-              <span>Chat</span>
-            </div>
+              <span className={`whitespace-nowrap`}>
+                {t("NetZoon Credits")}
+              </span>
+            </Link>
             <div
               className={`flex flex-col justify-center items-center w-[100px]`}
             >
@@ -615,7 +818,7 @@ const CurrentUserProfile = () => {
                   className={`w-4 md:w-7 h-4 md:h-7 text-white`}
                 />
               </div>
-              <span>Done</span>
+              <span>{t("done")}</span>
             </div>
             <div
               className={`flex flex-col justify-center items-center w-[100px]`}
@@ -627,7 +830,7 @@ const CurrentUserProfile = () => {
                   className={`w-4 md:w-7 h-4 md:h-7 text-white`}
                 />
               </div>
-              <span>Tracking</span>
+              <span>{t("tracking")}</span>
             </div>
             <div
               className={`flex flex-col justify-center items-center w-[100px]`}
@@ -639,7 +842,9 @@ const CurrentUserProfile = () => {
                   className={`w-4 md:w-7 h-4 md:h-7 text-white`}
                 />
               </div>
-              <span className={`whitespace-nowrap`}>Current Request</span>
+              <span className={`whitespace-nowrap`}>
+                {t("current requests")}
+              </span>
             </div>
             <div
               className={`flex flex-col justify-center items-center w-[100px]`}
@@ -649,7 +854,7 @@ const CurrentUserProfile = () => {
               >
                 <AiFillEdit className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
               </div>
-              <span className={`whitespace-nowrap`}>Edit Profile</span>
+              <span className={`whitespace-nowrap`}>{t("edit_profile")}</span>
             </div>
           </div>
           <div
@@ -660,21 +865,21 @@ const CurrentUserProfile = () => {
               className={`flex flex-col items-center justify-center`}
             >
               <span>{user.result.followings.length}</span>
-              <span>Followings</span>
+              <span>{t("Followings")}</span>
             </Link>
             <Link
               to="followers"
               className={`flex flex-col items-center justify-center`}
             >
               <span>{user.result.followers.length}</span>
-              <span>Followers</span>
+              <span>{t("Followers")}</span>
             </Link>
             <Link
               to="views"
               className={`flex flex-col items-center justify-center`}
             >
               <span>{user.result.profileViews}</span>
-              <span>Visitors</span>
+              <span>{t("visitors")}</span>
             </Link>
           </div>
           <div
@@ -696,7 +901,7 @@ const CurrentUserProfile = () => {
                 ].join(" ")
               }
             >
-              About Us
+              {t("about_us")}
             </NavLink>
             <NavLink
               end
@@ -714,8 +919,144 @@ const CurrentUserProfile = () => {
                 ].join(" ")
               }
             >
-              Services
+              {t("services")}
             </NavLink>
+          </div>
+        </>
+      )}
+      {user !== null && user.result.userType === "user" && (
+        <>
+          <div className={`w-full relative`}>
+            <div
+              className={`h-64 overflow-hidden flex justify-center items-center rounded-b-lg w-full md:w-auto`}
+            >
+              <img
+                src={user.result.coverPhoto}
+                alt={user.result.username}
+                // className={`w-full h-full`}
+              />
+            </div>
+            <div className={`absolute left-1/2 -translate-x-1/2 -bottom-20`}>
+              <img
+                src={user.result.profilePhoto}
+                alt={user.result.username}
+                className={`rounded-full border-2 border-white w-28 lg:w-32`}
+              />
+            </div>
+          </div>
+          <div className={`mt-20 `}>
+            <h2 className={`text-2xl font-semibold flex items-center mt-2`}>
+              <Link to="/profile/switchAccount">
+                <AiOutlineUserSwitch
+                  className={`text-[#5776a5] w-7 h-7 mr-2 cursor-pointer`}
+                />
+              </Link>
+              {user.result.username}
+              <Link to="/profile/addAccount">
+                <AiOutlineAppstoreAdd
+                  className={`text-[#5776a5] w-8 h-8 ml-2 cursor-pointer`}
+                />
+              </Link>
+            </h2>
+          </div>
+          <div
+            className={`flex items-center justify-between flex-wrap w-[90%] md:w-1/2 mt-4 border-t border-gray-300 pt-4`}
+          >
+            <Link
+              to="myOrders"
+              className={`flex flex-col justify-center items-center w-[100px]`}
+            >
+              <div
+                className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+              >
+                <TbShoppingCart
+                  className={`w-4 md:w-7 h-4 md:h-7 text-white`}
+                />
+              </div>
+              <span>{t("Orders")}</span>
+            </Link>
+            <Link
+              to="myOrders"
+              className={`flex flex-col justify-center items-center w-[100px]`}
+            >
+              <div
+                className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+              >
+                <TbShoppingCart
+                  className={`w-4 md:w-7 h-4 md:h-7 text-white`}
+                />
+              </div>
+              <span>{t("Orders")}</span>
+            </Link>
+            <Link
+              to="myCredit"
+              className={`flex flex-col justify-center items-center w-[100px]`}
+            >
+              <div
+                className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+              >
+                <BiWallet className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
+              </div>
+              <span className={`whitespace-nowrap`}>
+                {t("NetZoon Credits")}
+              </span>
+            </Link>
+            <Link
+              to="userProducts"
+              className={`flex flex-col justify-center items-center w-[100px]`}
+            >
+              <div
+                className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+              >
+                <MdViewList className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
+              </div>
+              <span>{t("my_products")}</span>
+            </Link>
+            <div
+              className={`flex flex-col justify-center items-center w-[100px]`}
+            >
+              <div
+                className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+              >
+                <AiFillHeart className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
+              </div>
+              <span>{t("Favorites")}</span>
+            </div>
+            {/* <div
+              className={`flex flex-col justify-center items-center w-[100px]`}
+            >
+              <div
+                className={`flex justify-center items-center p-2 rounded-full bg-[#5776a5]`}
+              >
+                ! <AiFillEdit className={`w-4 md:w-7 h-4 md:h-7 text-white`} />
+              </div>
+              <span className={`whitespace-nowrap`}>{t("edit_profile")}</span>
+            </div> */}
+          </div>
+          <div
+            className={`flex items-center justify-between w-[90%] md:w-1/3 mt-5`}
+          >
+            <Link
+              to="followings"
+              className={`flex flex-col items-center justify-center`}
+            >
+              <span>{user.result.followings.length}</span>
+              <span>{t("Followings")}</span>
+            </Link>
+            <Link
+              to="followers"
+              className={`flex flex-col items-center justify-center`}
+            >
+              <span>{user.result.followers.length}</span>
+              <span>{t("Followers")}</span>
+            </Link>
+            <Link
+              to="views"
+              className={`flex flex-col items-center justify-center`}
+            >
+              <span>{user.result.profileViews}</span>
+              <span>{t("visitors")}</span>
+            </Link>
           </div>
         </>
       )}

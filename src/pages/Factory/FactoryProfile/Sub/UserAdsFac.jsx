@@ -52,8 +52,7 @@ const UserAdsFac = () => {
 export default UserAdsFac;
 export const userAdsFacLoader = async ({ params }) => {
   const userFacId = params.facId;
-  const response = await fetch(
-    `https://net-zoon.onrender.com/advertisements/${userFacId}`
-  );
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+  const response = await fetch(baseUrl + `/advertisements/${userFacId}`);
   return response;
 };

@@ -3,27 +3,74 @@ import Select, { components } from "react-select";
 import { NavLink } from "react-router-dom";
 import { AiOutlinePlusSquare } from "react-icons/ai";
 import { useTranslation } from "react-i18next";
-// import "./Adda.css";
-const options = [
-  { value: "products", label: "Products", path: "add/products" },
-  { value: "services", label: "Services", path: "add/services" },
-  { value: "deal", label: "Deal", path: "add/deal" },
-  { value: "advertisement", label: "Advertisement", path: "add/advertisement" },
-  { value: "news", label: "News", path: "add/news" },
-  { value: "cars", label: "Cars", path: "add/cars" },
-  { value: "aircraft", label: "Aircraft", path: "add/aircraft" },
-  { value: "realestate", label: "Real Estate", path: "add/realestate" },
-];
+import { useSelector } from "react-redux";
 
-const DropdownIndicator = (props) => {
-  return (
-    <components.DropdownIndicator {...props}>
-      <AiOutlinePlusSquare className={`text-[#5776a5] text-2xl`} />
-    </components.DropdownIndicator>
-  );
-};
+const DropDown = ({ className }) => {
+  // Retrieve user data from localStorage
+  const userJSON = localStorage.getItem("user");
+  const user = userJSON ? JSON.parse(userJSON) : {};
 
-const DropDown = () => {
+  // Use optional chaining to safely access properties
+  const { userType, isService } = user.result || {};
+  const { t } = useTranslation();
+
+  let dynamicOptions = [];
+
+  if (userType === "local_company" || userType === "trader") {
+    if (!isService) {
+      dynamicOptions = [
+        { value: "products", label: t("Products"), path: "add/products" },
+        {
+          value: "advertisement",
+          label: t("Advertisement"),
+          path: "add/advertisement",
+        },
+        { value: "deal", label: t("deal"), path: "add/deal" },
+      ];
+    } else {
+      dynamicOptions = [
+        { value: "services", label: t("Services"), path: "add/services" },
+        {
+          value: "advertisement",
+          label: t("Advertisement"),
+          path: "add/advertisement",
+        },
+        { value: "deal", label: t("deal"), path: "add/deal" },
+      ];
+    }
+  }
+  const currency = useSelector((state) => state.currency.selectedCurrency);
+  if (userType === "user") {
+    dynamicOptions = [
+      {
+        value: "selectFromOurProducts",
+        label: t("select_from_our_products"),
+        path: `/add/selectFromOurProducts/${currency}`,
+      },
+      {
+        value: "advertisement",
+        label: t("Advertisement"),
+        path: "add/advertisement",
+      },
+      { value: "deal", label: t("deal"), path: "add/deal" },
+    ];
+  }
+  if (userType === "delivery_company") {
+    dynamicOptions = [
+      {
+        value: "addDeliveryService",
+        label: t("add_delivery_service"),
+        path: `/add/addDeliveryService`,
+      },
+      {
+        value: "advertisement",
+        label: t("Advertisement"),
+        path: "add/advertisement",
+      },
+      { value: "deal", label: t("deal"), path: "add/deal" },
+    ];
+  }
+
   const colourStyles = {
     control: (styles) => ({
       ...styles,
@@ -40,6 +87,7 @@ const DropDown = () => {
       };
     },
   };
+
   const formatOptionLabel = ({ label, path }) => (
     <NavLink
       className={({ isActive }) =>
@@ -58,13 +106,21 @@ const DropDown = () => {
       {label}
     </NavLink>
   );
-  const { t } = useTranslation();
+
+  const DropdownIndicator = (props) => {
+    return (
+      <components.DropdownIndicator {...props}>
+        <AiOutlinePlusSquare className={`text-[#5776a5] text-2xl`} />
+      </components.DropdownIndicator>
+    );
+  };
+
   return (
-    <div className="w-32 lg:w-40 cursor-pointer">
+    <div className={`w-32 lg:w-40 cursor-pointer ${className}`}>
       <Select
         styles={colourStyles}
         placeholder={`${t("Add a")}...`}
-        options={options}
+        options={dynamicOptions}
         formatOptionLabel={formatOptionLabel}
         components={{ DropdownIndicator }}
       />

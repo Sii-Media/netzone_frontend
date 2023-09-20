@@ -1,36 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import MainSection from "../../components/UI/MainSection";
-import { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaRegComments } from "react-icons/fa";
-import { BsSend } from "react-icons/bs";
+import ShareLink from "../../components/UI/ShareLink";
+
 const News = () => {
   const data = useLoaderData();
   const [liked, setLiked] = useState(false);
+  const userId = JSON.parse(window.localStorage.getItem("user"))?.result?._id;
+
+  useEffect(() => {
+    if (!userId) {
+      // If "user" item is not available in local storage, show an alert and redirect or handle it as needed
+      window.alert("Please login");
+      // You can also redirect the user to the login page or perform some other action here
+    }
+  }, [userId]);
+
   const handleLikeChange = async (e) => {
+    if (!userId) {
+      // If "user" item is not available, do not proceed with liking/unliking
+      window.alert("Please login");
+
+      return;
+    }
+
+    // Rest of your handleLikeChange code
+    console.log(userId);
+    console.log(e);
     setLiked(!liked);
     const formData = new FormData();
-    formData.append(
-      "userId",
-      JSON.parse(window.localStorage.getItem("user")).result._id
-    );
-    const response = await fetch(
-      `https://net-zoon.onrender.com/news/${e}/toggleonlike`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    formData.append("userId", userId);
+    const baseUrl = process.env.REACT_APP_BASE_URL;
+
+    const response = await fetch(baseUrl + `/news/${e}/toggleonlike`, {
+      method: "POST",
+      body: formData,
+    });
     const data = await response.json();
     console.log(data);
-    // console.log(e.target._id);
-    // formData.append(
-    //   "userId",
-    //   JSON.parse(window.localStorage.getItem("user")).result._id
-    // );
-    // const response = await fetch(`https://net-zoon.onrender.com/news/asdasdasd/toggleonlike`)
   };
+
   return (
     <MainSection className={`!mt-48 md:!mt-28`}>
       <ul>
@@ -62,30 +73,31 @@ const News = () => {
                 {ele.description}
               </div>
             </div>
-            <div className={` mt-4 flex items-center mb-2 `}>
-              <div className={`cursor-pointer`}>
-                {!liked && (
-                  <AiOutlineHeart
-                    onClick={() => handleLikeChange(ele._id)} // Pass the ID as an argument
-                    className={`text-[#5776a5] w-8 h-8 mr-4 p-1 border border-[#5776a5]`}
+            <div className={`flex justify-between`}>
+              <div className={` mt-4 flex items-center mb-2 `}>
+                <div className={`cursor-pointer `}>
+                  {!liked && (
+                    <AiOutlineHeart
+                      id={ele._id}
+                      onClick={() => handleLikeChange(ele._id)}
+                      className={`text-[#5776a5] w-9 h-9 mr-4 p-1 `}
+                    />
+                  )}
+                  {liked && (
+                    <AiFillHeart
+                      id={ele._id}
+                      onClick={() => handleLikeChange(ele._id)}
+                      className={`text-[#5776a5] w-9 h-9 mr-4 p-1 `}
+                    />
+                  )}
+                </div>
+                <Link to={`${ele._id}/comments`}>
+                  <FaRegComments
+                    className={`text-[#5776a5] w-8 h-8 mr-4 p-1 `}
                   />
-                )}
-                {liked && (
-                  <AiFillHeart
-                    onClick={() => handleLikeChange(ele._id)} // Pass the ID as an argument
-                    className={`text-[#5776a5] w-8 h-8 mr-4 p-1 border border-[#5776a5]`}
-                  />
-                )}
+                </Link>
+                <ShareLink />
               </div>
-              <Link to={`${ele._id}/comments`}>
-                <FaRegComments
-                  className={`text-[#5776a5] w-8 h-8 mr-4 p-1 border border-[#5776a5]`}
-                />
-              </Link>
-
-              <BsSend
-                className={`text-[#5776a5] w-8 h-8 mr-4 p-1 border border-[#5776a5]`}
-              />
             </div>
             <div className={`mb-1`}>
               {liked ? "You and" : ""} {ele.likes.length} People Liked This
@@ -108,8 +120,11 @@ const News = () => {
 };
 
 export default News;
+
 export const newsLoader = async () => {
-  const response = await fetch(`https://net-zoon.onrender.com/news`);
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
+  const response = await fetch(baseUrl + `/news`);
   const data = await response.json();
   return data;
 };

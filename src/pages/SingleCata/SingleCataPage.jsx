@@ -8,8 +8,10 @@ const SingleCataPage = () => {
 export default SingleCataPage;
 export const singleCataPageLoader = async ({ params }) => {
   const id = params.routeId;
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+  const currency = params.currency;
   const response = await fetch(
-    `https://net-zoon.onrender.com/user/getUserByType?userType=${id}`
+    baseUrl + `/user/getUserByType?userType=${id}&country=${currency}`
   );
   const data = await response.json();
   return { id, data };

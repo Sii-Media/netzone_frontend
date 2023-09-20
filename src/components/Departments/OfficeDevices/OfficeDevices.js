@@ -5,12 +5,13 @@ import Card from "../../UI/Card";
 import MultiItemCarousel from "../../UI/MultiItemCarousel";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import useCarouselLogic from "../../../hooks/useCarouselHook";
 
 const OfficeDevices = () => {
   const currency = useSelector((state) => state.currency.selectedCurrency);
 
   const data = useLoaderData();
-  const isCarousel = data[1].results.length >= 5 ? true : false;
+  const isCarousel = useCarouselLogic(1);
   const { t } = useTranslation();
   const items = data[1].results.map((ele) => (
     <Card

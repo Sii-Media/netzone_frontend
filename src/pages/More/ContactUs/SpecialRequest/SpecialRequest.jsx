@@ -40,6 +40,8 @@ const SpecialRequest = () => {
 
 export default SpecialRequest;
 export const specialRequestAction = async ({ request }) => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const data = await request.formData();
   const address = await data.get("address");
   const text = await data.get("text");
@@ -47,7 +49,7 @@ export const specialRequestAction = async ({ request }) => {
   formData.append("text", text);
   formData.append("address", address);
 
-  const response = await fetch(`https://net-zoon.onrender.com/requests`, {
+  const response = await fetch(baseUrl + `/requests`, {
     method: request.method,
     body: formData,
   });

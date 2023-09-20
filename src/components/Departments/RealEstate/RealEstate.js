@@ -5,11 +5,16 @@ import MultiItemCarousel from "../../UI/MultiItemCarousel";
 import AdCard from "../../UI/AdCard";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { getCurrencySymbol } from "../../../funcs/Currency";
 
 const RealEstate = () => {
   const data = useLoaderData();
   const isCarousel = data[16].length >= 2 ? true : false;
   const { t } = useTranslation();
+  const currencySymbol = useSelector((state) =>
+    getCurrencySymbol(state.currency.selectedCurrency)
+  );
+  const currency = useSelector((state) => state.currency.selectedCurrency);
   const items = data[16].map((ele) => (
     <AdCard
       key={ele._id}
@@ -17,18 +22,18 @@ const RealEstate = () => {
       imgAlt={ele.name}
       first={t(ele.title)}
       second={ele.description}
-      third={`Price : ${ele.price}`}
+      third={`Price : ${ele.price.toLocaleString()} ${t(currencySymbol)}`}
       fourth={`Location : ${ele.location}`}
-      path={`realEstate/AE/${ele._id}`}
+      path={`realEstate/${currency}/${ele._id}`}
     />
   ));
-  const currency = useSelector((state) => state.currency.selectedCurrency);
 
   return (
     <MainSection className="py-2">
       <SectionsHeader title={"Real Estate"} path={`/realEstate/${currency}`} />
-      {isCarousel ? (
+      {data[16].length > 0 && isCarousel ? (
         <MultiItemCarousel
+          isCarouselAutoPlayMobile={true}
           count0={1}
           count1={2}
           count2={2}
@@ -37,10 +42,14 @@ const RealEstate = () => {
           count5={3}
           count6={4}
           items={items}
+          autoPlayInterval={2000}
           autoPlayDirection={"rtl"}
         />
       ) : (
         <div className="flex">{items}</div>
+      )}
+      {data[16].length === 0 && (
+        <p className={`text-2xl font-semibold`}>Sorry,No Data Found</p>
       )}
     </MainSection>
   );

@@ -2,10 +2,17 @@ import React from "react";
 import { useLoaderData } from "react-router-dom";
 import MainSection from "../UI/MainSection";
 import ShareLink from "../UI/ShareLink";
+import { getCurrencySymbol } from "../../funcs/Currency";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const RealEstateDetailsComp = () => {
   const data = useLoaderData();
-  console.log(data);
+
+  const currencySymbol = useSelector((state) =>
+    getCurrencySymbol(state.currency.selectedCurrency)
+  );
+  const { t } = useTranslation();
   return (
     <MainSection className={`!mt-52 md:!mt-24 w-[90%] md:w-[70%] mx-auto`}>
       <div className={`flex flex-col`}>
@@ -25,7 +32,9 @@ const RealEstateDetailsComp = () => {
               </p> */}
             </div>
             <div>
-              <h2 className={`text-2xl mb-4 text-[#5776a5]`}>{data.price}</h2>
+              <h2 className={`text-2xl mb-4 text-[#5776a5]`}>
+                {data.price.toLocaleString()} {t(currencySymbol)}
+              </h2>
             </div>
             <div>
               {/* <div className={`mb-4`}> */}

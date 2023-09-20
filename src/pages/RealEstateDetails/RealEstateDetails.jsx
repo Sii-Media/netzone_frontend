@@ -8,8 +8,10 @@ const RealEstateDetails = () => {
 export default RealEstateDetails;
 export const realEstateDetailsLoader = async ({ params }) => {
   const realEstateId = params.realEstateId;
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const response = await fetch(
-    `https://net-zoon.onrender.com/real-estate/getById/${realEstateId}`
+    baseUrl + `/real-estate/getById/${realEstateId}`
   );
   const data = await response.json();
   console.log(data);

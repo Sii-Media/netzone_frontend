@@ -40,11 +40,13 @@ const Question = () => {
 
 export default Question;
 export const questionAction = async ({ request }) => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const data = await request.formData();
   const question = await data.get("question");
   const formData = new FormData();
   formData.append("text", question);
-  const response = await fetch(`https://net-zoon.onrender.com/questions`, {
+  const response = await fetch(baseUrl + `/questions`, {
     method: request.method,
     body: formData,
   });
